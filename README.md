@@ -2,7 +2,7 @@
 
 > **Đề tài 21**: "Viết chương trình quản lý cán bộ theo hướng đối tượng."
 > **Môn học**: PBL2 (Project-Based Learning 2) · **Ngành**: CNTT
-> **Kiến trúc chính thức**: **8 bảng** (7 nghiệp vụ + `TAI_KHOAN` đăng nhập)
+> **Kiến trúc chính thức**: **8 bảng** (10 nghiệp vụ + `TAI_KHOAN` đăng nhập)
 
 ---
 
@@ -199,6 +199,19 @@ Không chỉ lưu **trạng thái hiện tại** mà còn lưu **lịch sử qu�
 
 ## 5. THIẾT KẾ CHI TIẾT TỪNG BẢNG
 
+**Ánh xạ Bảng ERD → Class C++ → File dữ liệu** (mục này mô tả ở tầng CSDL; tên class code như mục 8):
+
+| Bảng ERD (mục 4/5) | Class C++ (mục 8) | File dữ liệu (mục 10) |
+|---|---|---|
+| `CAN_BO` | `CanBo` | `data/canbo.txt` |
+| `PHONG_BAN` | `PhongBan` | `data/phongban.txt` |
+| `CHUC_VU` | `ChucVu` | `data/chucvu.txt` |
+| `PHAN_CONG` | `PhanCong` | `data/phancong.txt` |
+| `LICH_SU_LUONG` | `Luong` | `data/luong.txt` |
+| `DANH_GIA` | `DanhGia` | `data/danhgia.txt` |
+| `KHEN_THUONG_KY_LUAT` | `ThiDua` | `data/thidua.txt` |
+| `TAI_KHOAN` | `Account` | `data/account.txt` |
+
 ### 5.1 CAN_BO — Thực thể trung tâm
 
 | Cột | Kiểu | Ràng buộc | Mô tả |
@@ -249,7 +262,7 @@ Không chỉ lưu **trạng thái hiện tại** mà còn lưu **lịch sử qu�
 
 > **Vai trò**: thay thế `BO_NHIEM` của kiến trúc cũ — đảm nhận cả phân công phòng, đảm nhiệm chức vụ, kiêm nhiệm, điều chuyển và bổ nhiệm/miễn nhiệm, đồng thời giữ lịch sử.
 
-### 5.5 LICH_SU_LUONG — Lịch sử lương
+### 5.5 LICH_SU_LUONG — Lịch sử lương (class `Luong`)
 
 | Cột | Kiểu | Ràng buộc | Mô tả |
 |---|---|---|---|
@@ -275,7 +288,7 @@ Không chỉ lưu **trạng thái hiện tại** mà còn lưu **lịch sử qu�
 | `NhanXet` | VARCHAR | — | Nhận xét |
 | `NgayDanhGia` | DATE | — | Ngày đánh giá |
 
-### 5.7 KHEN_THUONG_KY_LUAT — Khen thưởng & Kỷ luật (gộp)
+### 5.7 KHEN_THUONG_KY_LUAT — Khen thưởng & Kỷ luật (gộp) (class `ThiDua`)
 
 | Cột | Kiểu | Ràng buộc | Mô tả |
 |---|---|---|---|
@@ -288,7 +301,7 @@ Không chỉ lưu **trạng thái hiện tại** mà còn lưu **lịch sử qu�
 
 > `KHEN_THUONG_KY_LUAT` KHÔNG phải thuộc tính string đơn giản của `CAN_BO` — quan hệ `CAN_BO 1:N KHEN_THUONG_KY_LUAT` cho phép nhiều bản ghi/cán bộ.
 
-### 5.8 TAI_KHOAN — Tài khoản đăng nhập (ADMIN + USER gộp chung)
+### 5.8 TAI_KHOAN — Tài khoản đăng nhập (ADMIN + USER gộp chung) (class `Account`)
 
 | Cột | Kiểu | Ràng buộc | Mô tả |
 |---|---|---|---|
@@ -299,7 +312,7 @@ Không chỉ lưu **trạng thái hiện tại** mà còn lưu **lịch sử qu�
 | `TrangThai` | BOOLEAN | — | `true` = hoạt động; `false` = bị khóa |
 | `MaCanBo` | VARCHAR | **FK → CAN_BO**, NULL | Cán bộ tương ứng (USER); ADMIN để trống |
 
-> **Cách tiếp cận**: MỘT class `TaiKhoan` có cột `VaiTro` phân biệt Admin/User (KHÔNG dùng inheritance như một số bản tham khảo). Admin/User khác nhau chủ yếu ở **quyền**, nên `VaiTro` là đủ cho PBL2.
+> **Cách tiếp cận**: MỘT class `Account` có cột `VaiTro` phân biệt Admin/User (KHÔNG dùng inheritance như một số bản tham khảo). Admin/User khác nhau chủ yếu ở **quyền**, nên `VaiTro` là đủ cho PBL2.
 
 ---
 
@@ -330,9 +343,9 @@ ThucLinh = (HeSoLuong + PhuCap) * 1.490.000 + AnTrua
 | Chức vụ | `PHAN_CONG.MaChucVu` → `CHUC_VU` (bản hiệu lực) |
 | Hệ số lương | `LICH_SU_LUONG.HeSoLuong` (bản hiệu lực) |
 | Phụ cấp trách nhiệm | `CHUC_VU.PhuCapChucVu` → snapshot `LICH_SU_LUONG.PhuCap` |
-| Ăn trưa | `LICH_SU_LUONG.AnTrua` |
+| Ăn trưa | `LUONG.AnTrua` |
 | **Thực lĩnh** | **Tính toán** `= (HSL + PC) * 1.490.000 + AnTrua` |
-| Năm tăng lương | `LICH_SU_LUONG.TuNgay` (lần tăng gần nhất) |
+| Năm tăng lương | `LUONG.TuNgay` (lần tăng gần nhất) |
 | Xếp loại lao động | `DANH_GIA.XepLoai` (bản mới nhất) |
 
 ---
@@ -422,26 +435,34 @@ CREATE TABLE TAI_KHOAN (
 
 ## 8. KIẾN TRÚC OOP & CẤU TRÚC THƯ MỤC
 
-### 8.1 Nguyên tắc OOP
+### 8.1 Nguyên tắc OOP — 4 tính chất hiện rõ trong code
 
-- **Encapsulation**: mỗi thực thể là một class với thuộc tính `private`, truy cập qua getter/setter.
-- **Association**: các class liên kết qua khóa (mã ID) — `CanBo` ↔ `PhanCong`, `PhanCong` ↔ `PhongBan`, `PhanCong` ↔ `ChucVu` (KHÔNG nhúng giá trị đối tượng như bản phase 1).
-- **Aggregation**: `PhongBan` chứa nhiều `CanBo` thông qua `PhanCong`; `KhoDuLieu` (kho dữ liệu) chứa toàn bộ `Vector` của 8 entity.
-- **Generic Programming**: **`Vector<T>` tự viết** (mảng động dạng template) — hiện thực quản lý bộ nhớ động `new[]/delete[]`, thể hiện rõ encapsulation + phân tích độ phức tạp.
-- **Không ép Inheritance**: chưa có lý do nghiệp vụ thực sự; `TaiKhoan` dùng `VaiTro` để phân quyền (Admin/User khác nhau chủ yếu ở quyền) thay vì tạo 2 class kế thừa.
+Chương trình thể hiện đầy đủ **4 tính chất cơ bản của lập trình hướng đối tượng**:
+
+| Tính chất | Cách thể hiện trong đồ án |
+|---|---|
+| **Encapsulation** (đóng gói) | Mọi thuộc tính của mỗi thực thể là `private`, truy cập duy nhất qua getter/setter. Tầng nghiệp vụ `NghiepVu` chỉ gọi qua interface (`GetMaCB()`, `HieuLuc()`, `Them()`, `LayTai()`...), không bao giờ đụng trực tiếp field. Trạng thái "đang hiệu lực" được giấu sau `HieuLuc()` |
+| **Abstraction** (trừu tượng) | Lớp nền `ThucThe` định nghĩa **bộ 4 hành vi chung** (`nhap`, `xuat`, `ghiDong`, `docDong`) cho mọi thực thể; tầng nghiệp vụ `NghiepVu` phơi ra API nghiệp vụ (`tongThuNhap()`, `demCanBoNu()`, `dangNhap()`...) — người gọi (main) không cần biết chi tiết lưu trữ |
+| **Inheritance** (kế thừa) | Lớp nền trừu tượng `ThucThe` (`virtual` + pure virtual) → **8 model kế thừa** `: public ThucThe` và `override` 4 hành vi chung. `Account` ánh xạ `nhap()/xuat()` sang `input()/display()` riêng của nó |
+| **Polymorphism** (đa hình) | `virtual/override` trong `ThucThe` cho phép gọi `xuat()`/`ghiDong()` qua con trỏ `ThucThe*` — cùng một lệnh nhưng chạy đúng hành vi của từng loại thực thể (xem §8.6). Ngoài ra có **nạp chồng toán tử** (`PhanCong::operator==`, `Vector::operator[]`) |
+
+- **Association**: các class liên kết qua khóa (mã ID) — `CanBo` ↔ `PhanCong`, `PhanCong` ↔ `PhongBan`, `PhanCong` ↔ `ChucVu` (KHÔNG nhúng giá trị đối tượng).
+- **Aggregation**: `PhongBan` chứa nhiều `CanBo` thông qua `PhanCong`; mỗi class entity **tự quản danh sách tĩnh mảng động** của chính nó (`static T* ds; static int soLuong; static int sucChua;` + `Them/XoaMot/LayTai/SoLuong/DocTatCa/GhiTatCa`) bằng `new[]/delete[]` + **nhân đôi khi đầy** → thể hiện rõ encapsulation + phân tích độ phức tạp. Mô-đun `Vector` (mảng `int` động, rule of three) giữ nguyên làm ví dụ minh họa.
+- **VaiTro thay cho kế thừa hành vi**: `Account` dùng cột `VaiTro` để phân quyền (Admin/User khác nhau chủ yếu ở quyền) — KHÔNG tạo 2 class kế thừa; kế thừa trong đồ án nằm ở chỗ 8 model dùng chung `ThucThe`.
 
 > **Phân biệt**:
 > - **DATABASE ENTITY** = 8 bảng ở trên.
-> - **C++ CLASS** = 8 class model + `Vector<T>` (cấu trúc dữ liệu tự viết) + `KhoDuLieu` + 5 service (class phụ phục vụ triển khai).
-> - Thuộc tính (`TrinhDo`...) ≠ bảng ≠ data structure (`Vector<T>`).
+> - **C++ CLASS** = 8 class model (kế thừa `ThucThe`) + `Vector` (cấu trúc dữ liệu tự viết) + tầng nghiệp vụ `NghiepVu` (phục vụ triển khai).
+> - Thuộc tính (`TrinhDo`...) ≠ bảng ≠ data structure (`Vector`).
 
 ### 8.2 Quy tắc triển khai đã chốt
 
-- **Mã khóa tự sinh** bởi `KhoDuLieu::sinhMaTuDong(prefix, list)` — người dùng không nhập mã → đảm bảo PK unique: `CB001…`, `P01…`, `CV01…`, `PC001…`, `ML001…`, `DG001…`, `SK001…`, `TK001…`.
-- **`PHAN_CONG` nhập tay đầy đủ**: người dùng chọn `MaCanBo`, `MaPhong`, `MaChucVu` từ danh sách hiện có và nhập `TuNgay`, `DenNgay` (để trống = hiệu lực), `LoaiPhanCong`, `LaPhongChinh` (0/1). Service vẫn kiểm tra ràng buộc C2/C3.
+- **Mã khóa tự sinh** (hàm tiện ích trong `NghiepVu`, dựa trên `SoLuong()` của từng danh sách) — người dùng không nhập mã → đảm bảo PK unique: `CB001…`, `P01…`, `CV01…`, `PC001…`, `ML001…`, `DG001…`, `SK001…`, `TK001…`. Kèm hàm tiện ích **`timTheoMa(...)`** tìm bản ghi theo mã (linear search, xem §9.1).
+- **`PHAN_CONG` nhập tay đầy đủ**: người dùng chọn `MaCanBo`, `MaPhong`, `MaChucVu` từ danh sách hiện có và nhập `TuNgay`, `DenNgay` (để trống = hiệu lực), `LoaiPhanCong`, `LaPhongChinh` (0/1). `NghiepVu` vẫn kiểm tra ràng buộc C2/C3.
 - **Giới tính**: chỉ nhận `Nam` hoặc `Nu` (`CanBo::nhap()` validate, nhập khác → hỏi lại).
-- **Chu kỳ nâng lương cố định `CHU_KY_NANG_LUONG = 3`** (năm) — áp dụng trong `LuongService::lietKeDenHanTangLuong()`.
-- **Đăng nhập**: 1 class `TaiKhoan` (`VaiTro = ADMIN/USER`), mật khẩu lưu rõ ràng (demo), đăng nhập qua `TaiKhoanService`. **Tài khoản mặc định demo**: `admin / admin` (ADMIN) và `user / user` (USER).
+- **Chu kỳ nâng lương cố định `CHU_KY_NANG_LUONG = 3`** (năm) — áp dụng trong `NghiepVu::lietKeDenHanTangLuong()`.
+- **Đăng nhập**: 1 class `Account` (`VaiTro = ADMIN/USER`), mật khẩu lưu rõ ràng (demo), đăng nhập qua `NghiepVu::dangNhap()`. **Tài khoản mặc định demo**: `admin / admin` (ADMIN) và `user / user` (USER).
+- **Gộp nghiệp vụ 1 module `NghiepVu`**: toàn bộ 10 chức năng + đăng nhập + `sinhMaTuDong`/`timTheoMa` là **hàm tĩnh** của 1 class `NghiepVu` (không cần tách 5 service vì mọi danh sách đã là `static` trong từng model).
 
 ### 8.3 Cấu trúc thư mục (1 mô-đun = 1 cặp `.h` + `.cpp`, phẳng tại thư mục gốc)
 
@@ -449,30 +470,22 @@ CREATE TABLE TAI_KHOAN (
 QL_CANBO/
 ├── README.md                            ← báo cáo + ERD (file này)
 │
-│   ── 7 MÔ-ĐUN MODEL NGHIỆP VỤ (.h + .cpp) ──
-├── CanBo.h           / CanBo.cpp
-├── PhongBan.h        / PhongBan.cpp
-├── ChucVu.h          / ChucVu.cpp
-├── PhanCong.h        / PhanCong.cpp
-├── LichSuLuong.h     / LichSuLuong.cpp
-├── DanhGia.h         / DanhGia.cpp
-├── KhenThuongKyLuat.h / KhenThuongKyLuat.cpp
+│   ── 8 MÔ-ĐUN MODEL (.h + .cpp) ── mỗi class tự quản danh sách tĩnh mảng động
+├── ThucThe.h                         ← lớp nền trừu tượng (4 hành vi chung) — 8 model kế thừa
+├── CanBo.h           / CanBo.cpp     ← CAN_BO
+├── PhongBan.h        / PhongBan.cpp  ← PHONG_BAN
+├── ChucVu.h          / ChucVu.cpp    ← CHUC_VU
+├── PhanCong.h        / PhanCong.cpp  ← PHAN_CONG
+├── Luong.h           / Luong.cpp     ← LICH_SU_LUONG
+├── DanhGia.h         / DanhGia.cpp   ← DANH_GIA
+├── ThiDua.h          / ThiDua.cpp    ← KHEN_THUONG_KY_LUAT
+├── Account.h         / Account.cpp   ← TAI_KHOAN (ADMIN + USER gộp, VaiTro)
 │
-│   ── 1 MÔ-ĐUN MODEL ĐĂNG NHẬP (.h + .cpp) ──
-├── TaiKhoan.h        / TaiKhoan.cpp     ← ADMIN + USER gộp (VaiTro)
+│   ── 1 MÔ-ĐUN CẤU TRÚC DỮ LIỆU (.h + .cpp) ──
+├── Vector.h          / Vector.cpp        ← mảng int động tự viết (minh họa new[]/delete[])
 │
-│   ── 1 MÔ-ĐUN CẤU TRÚC LƯU TRỮ (.h + .cpp) ──
-├── Vector.h          / Vector.cpp       ← mảng động tự viết (template + explicit instantiation)
-│
-│   ── 1 MÔ-ĐUN KHO DỮ LIỆU (.h + .cpp) ──
-├── KhoDuLieu.h       / KhoDuLieu.cpp    ← 8 Vector + load/save file
-│
-│   ── 5 MÔ-ĐUN NGHIỆP VỤ (.h + .cpp) ──
-├── CanBoService.h    / CanBoService.cpp   ← hồ sơ CB + phòng + chức vụ + phân công
-├── LuongService.h    / LuongService.cpp   ← lịch sử lương + thực lĩnh + nâng lương
-├── DanhGiaService.h  / DanhGiaService.cpp ← đánh giá + khen thưởng/kỷ luật
-├── BaoCaoService.h   / BaoCaoService.cpp  ← tìm kiếm + sắp xếp + thống kê + hiển thị
-├── TaiKhoanService.h / TaiKhoanService.cpp ← đăng nhập, đổi mật khẩu, phân quyền menu
+│   ── 1 MÔ-ĐUN NGHIỆP VỤ (.h + .cpp) ── toàn bộ 10 chức năng + đăng nhập
+├── NghiepVu.h          / NghiepVu.cpp      ← hồ sơ/phòng/chức vụ/phân công/lương/đánh giá/khen thưởng + báo cáo + tài khoản
 │
 ├── data/                                 ← 8 file dữ liệu .txt (mục 10)
 └── main.cpp                              ← đăng nhập → menu ADMIN / USER
@@ -484,7 +497,7 @@ QL_CANBO/
 ============================================
       HỆ THỐNG QUẢN LÝ CÁN BỘ
 ============================================
-Đăng nhập bằng tài khoản (TaiKhoanService)
+Đăng nhập bằng tài khoản (qua NghiepVu)
    -> ADMIN: toàn quyền / USER: xem thông tin
 ============================================
 
@@ -518,32 +531,58 @@ QL_CANBO/
 g++ *.cpp -o QLCB.exe
 ```
 
+### 8.6 Liên kết giữa các thực thể & phép join runtime
+Quan hệ giữa các thực thể (ERD, mục 4) được thể hiện trong code bằng **khóa (mã ID)**: bảng con giữ cột FK, và **`NghiepVu` thực hiện phép "join" bằng cách quét danh sách, so khóa (FK == PK) khi chạy** — không nhúng con trỏ/reference giữa các model.
+
+| Quan hệ (ERD mục 4) | Khóa liên kết | Nơi thực hiện join |
+|---|---|---|
+| `CAN_BO` 1 : N `PHAN_CONG` | `PHAN_CONG.MaCanBo` == `CAN_BO.MaCanBo` | `NghiepVu` — quản lý hồ sơ/phân công |
+| `PHONG_BAN` 1 : N `PHAN_CONG` | `PHAN_CONG.MaPhong` == `PHONG_BAN.MaPhong` | `NghiepVu` — quản lý hồ sơ/phân công |
+| `CHUC_VU` 1 : N `PHAN_CONG` | `PHAN_CONG.MaChucVu` == `CHUC_VU.MaChucVu` | `NghiepVu` — quản lý hồ sơ/phân công |
+| `CAN_BO` 1 : N `LICH_SU_LUONG` | `LICH_SU_LUONG.MaCanBo` == `CAN_BO.MaCanBo` | `NghiepVu` — quản lý lương |
+| `CAN_BO` 1 : N `DANH_GIA` | `DANH_GIA.MaCanBo` == `CAN_BO.MaCanBo` | `NghiepVu` — quản lý đánh giá |
+| `CAN_BO` 1 : N `KHEN_THUONG_KY_LUAT` | `KHEN_THUONG_KY_LUAT.MaCanBo` == `CAN_BO.MaCanBo` | `NghiepVu` — quản lý đánh giá |
+| `CAN_BO` 1 : 0..1 `TAI_KHOAN` | `TAI_KHOAN.MaCanBo` == `CAN_BO.MaCanBo` (NULL) | `NghiepVu` — đăng nhập |
+
+Ví dụ join 2 bảng (chức năng 5 — tổng thu nhập): duyệt `CAN_BO`, với mỗi mã CB quét `LICH_SU_LUONG`, chọn bản `HieuLuc()`, lấy `tinhThucLinh()` và cộng dồn — chi tiết ở §9.2.
+
+**Đa hình khi hiển thị** — vì 8 model kế thừa `ThucThe`, một hàm duy nhất in được mọi loại thực thể:
+
+```cpp
+void xuatTatCa(ThucThe* ds[], int n) {
+    for (int i = 0; i < n; i++) ds[i]->xuat(); // gọi đúng xuat() của từng loại thật
+}
+```
+
+> Liên kết dữ liệu là **logic so khóa lúc chạy** (không phải con trỏ nhúng) — phản ánh đúng quan hệ ERD 1:N ở mục 4 và tránh phụ thuộc vòng giữa các model.
+
 ---
 
 ## 9. CẤU TRÚC DỮ LIỆU & THUẬT TOÁN (BIG-O)
 
 ### 9.1 Cấu trúc dữ liệu
-- Mỗi entity quản lý bằng **`Vector<T>` tự viết** (mảng động, không dùng `std::vector`) — hiểu tường tận cơ chế mảng động.
-- API đủ dùng: `push_back`, `operator[]`, `erase`, `size`, `capacity`, `empty`, `clear`, `pop_back`, copy constructor, `operator=`, destructor, `begin()/end()`.
-- Cấp phát **nhân đôi** khi đầy → `push_back` **O(1) amortized**; `erase` **O(n)** do phải dịch chuyển các phần tử phía sau.
-- `Vector.cpp` chứa **explicit instantiation** cho 8 kiểu (`CanBo`, `PhongBan`, `ChucVu`, `PhanCong`, `LichSuLuong`, `DanhGia`, `KhenThuongKyLuat`, `TaiKhoan`).
+- Mỗi class entity **tự quản danh sách tĩnh mảng động** của chính nó (`static T* ds; static int soLuong; static int sucChua;`), viết tay bằng `new[]/delete[]` — **không dùng `std::vector`**.
+- API của mỗi danh sách: `Them` (= push_back), `XoaMot(idx)` (= erase), `LayTai(idx)` (= operator[]), `SoLuong()` (= size), `DocTatCa()/GhiTatCa()` (load/save file).
+- Cấp phát **nhân đôi** khi đầy → `Them` **O(1) amortized**; `XoaMot` **O(n)** do phải dịch chuyển các phần tử phía sau.
+- Mô-đun `Vector` (mảng `int` động, rule of three, `operator[]` ném `out_of_range`) giữ nguyên như ví dụ minh họa cơ chế mảng động; danh sách thực tế do từng class quản lý.
+- `DocTatCa()` reset danh sách trước khi load → gọi nhiều lần không nhân đôi dữ liệu.
 - Tìm kiếm mặc định: **Linear Search** (O(n)). (Tùy chọn nâng cao) `std::unordered_map<string, size_t>` index theo mã → tìm trung bình **O(1)**, trade-off: tốn bộ nhớ, phải đồng bộ khi thêm/xóa.
 
 ### 9.2 Ánh xạ 10 chức năng đề bài → Thuật toán
 
 | Đề bài | Cấu trúc / Thuật toán | Độ phức tạp |
 |---|---|---|
-| 1 & 10. Nhập / Thêm cán bộ | `Vector::push_back` | **O(1)** (amortized) |
-| 2. Hiển thị danh sách | duyệt bằng `operator[]` | **O(n)** |
-| 3. Liệt kê đến hạn nâng lương | duyệt `LICH_SU_LUONG` bản hiệu lực + so chu kỳ 3 năm | **O(n)** |
+| 1 & 10. Nhập / Thêm cán bộ | mảng động tự viết: `Them()` (nhân đôi khi đầy) | **O(1)** (amortized) |
+| 2. Hiển thị danh sách | duyệt bằng `LayTai(idx)` | **O(n)** |
+| 3. Liệt kê đến hạn nâng lương | duyệt `Luong` bản hiệu lực + so chu kỳ 3 năm | **O(n)** |
 | 4. Đếm cán bộ nữ | vòng lặp so `GioiTinh == "Nu"` | **O(n)** |
 | 5. Tổng thu nhập | vòng lặp cộng dồn + `tinhThucLinh()` | **O(n)** |
 | 6. Lọc chuyên môn CNTT | duyệt + so `ChuyenMon` | **O(n)** |
 | 7. Cán bộ xếp loại "Giỏi" | duyệt `DANH_GIA` lấy bản mới nhất + lọc | **O(n)** |
-| 8. Sắp xếp theo mã cán bộ | `std::sort` (qua `Vector::begin()/end()`) | **O(n log n)** |
-| 9. Xóa theo mã cán bộ | Linear search + `Vector::erase` / xóa mềm | **O(n)** |
+| 8. Sắp xếp theo mã cán bộ | thuật toán sắp xếp tự viết trên mảng (QuickSort/MergeSort) | **O(n log n)** |
+| 9. Xóa theo mã cán bộ | Linear search + `XoaMot(idx)` / xóa mềm | **O(n)** |
 
-> **Đăng nhập**: tìm `TaiKhoan` theo `TenDangNhap` bằng Linear Search → **O(n)**.
+> **Đăng nhập**: tìm `Account` theo `TenDangNhap` bằng Linear Search → **O(n)**.
 
 ### 9.3 Giải thích ngắn
 - **O(1)** thêm cuối: `Vector` cấp phát thêm bộ nhớ theo cấp số nhân → phí amortized là hằng số.
@@ -558,18 +597,18 @@ g++ *.cpp -o QLCB.exe
 
 | File | Nội dung |
 |---|---|
-| `data/canbo.txt` | CAN_BO |
-| `data/phongban.txt` | PHONG_BAN |
-| `data/chucvu.txt` | CHUC_VU |
-| `data/phancong.txt` | PHAN_CONG |
-| `data/lichsuluong.txt` | LICH_SU_LUONG |
-| `data/danhgia.txt` | DANH_GIA |
-| `data/khenthuongkyluat.txt` | KHEN_THUONG_KY_LUAT |
-| `data/taikhoan.txt` | TAI_KHOAN |
+| `data/canbo.txt` | CAN_BO (class `CanBo`) |
+| `data/phongban.txt` | PHONG_BAN (class `PhongBan`) |
+| `data/chucvu.txt` | CHUC_VU (class `ChucVu`) |
+| `data/phancong.txt` | PHAN_CONG (class `PhanCong`) |
+| `data/luong.txt` | LICH_SU_LUONG (class `Luong`) |
+| `data/danhgia.txt` | DANH_GIA (class `DanhGia`) |
+| `data/thidua.txt` | KHEN_THUONG_KY_LUAT (class `ThiDua`) |
+| `data/account.txt` | TAI_KHOAN (class `Account`) |
 
-- `KhoDuLieu` chịu trách nhiệm `loadAll()` khi khởi động và `saveAll()` sau mỗi thao tác ghi.
+- Mỗi class gọi `DocTatCa()` khi khởi động và `GhiTatCa()` sau mỗi thao tác ghi (qua `NghiepVu`).
 - Giá trị `DenNgay` rỗng (không có) được hiểu là **đang hiệu lực**.
-- Ứng với `Vector<T>` tự viết, việc ghi/đọc lặp từng phần tử của `Vector`.
+- Việc ghi/đọc lặp từng phần tử của danh sách tĩnh (`GhiTatCa`/`DocTatCa`).
 
 ---
 
@@ -585,14 +624,15 @@ g++ *.cpp -o QLCB.exe
 | 6 | Xác định cấu trúc dữ liệu | ✅ `Vector` tự viết |
 | 7 | Xác định thuật toán + Big-O | ✅ Mục 9 |
 | 8 | Thiết kế lưu trữ file | ✅ Mục 10 |
-| 9 | Code model/class | 🔄 7 model xong; chờ `Vector`, `TaiKhoan` |
-| 10 | Code `Vector<T>` | ⏳ |
-| 11 | Code `KhoDuLieu` + load/save | ⏳ |
-| 12 | Code nghiệp vụ (5 service) | ⏳ |
+| 9 | Code model/class | ✅ 8 model xong (mỗi class tự quản danh sách + file I/O) |
+| 10 | Code `Vector` mảng động | ✅ `Vector` int-array (guard + ném `out_of_range`) |
+| 11 | Code lớp nền `ThucThe` + hàm tiện ích (sinh mã, tìm kiếm) | ⏳ |
+| 12 | Code nghiệp vụ (`NghiepVu` — gộp 1 module) | ⏳ |
 | 13 | Code search/sort/statistics | ⏳ |
 | 14 | UI/menu + đăng nhập | ⏳ |
-| 15 | Kiểm thử & báo cáo | ⏳ |
+| 15 | Kiểm thử (bao gồm đa hình qua `ThucThe*`) & báo cáo | ⏳ |
 
 ---
 
 *Tài liệu này là nguồn tri thức chính thức của dự án. Mọi thiết kế (ERD, Class Diagram, code, báo cáo) phải nhất quán với mô hình 8 bảng được mô tả ở trên.*
+# PBL2-QL_CANBO
