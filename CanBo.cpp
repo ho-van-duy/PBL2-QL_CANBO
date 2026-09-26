@@ -47,6 +47,7 @@ void CanBo::nhap() {
 }
 
 void CanBo::xuat() const {
+    ThucThe::xuat();
     cout << "Ma can bo: " << MaCanBo
          << " | Ho ten: " << HoTen
          << " | Gioi tinh: " << GioiTinh
@@ -57,6 +58,8 @@ void CanBo::xuat() const {
          << " | Ngay vao lam: " << NgayVao
          << " | Trang thai: " << TrangThai << endl;
 }
+
+string CanBo::loaiThucThe() const { return "CAN_BO"; }
 
 void CanBo::ghiDong(ofstream& out) const {
     out << MaCanBo << '|' << HoTen << '|' << NgaySinh << '|' << GioiTinh << '|'

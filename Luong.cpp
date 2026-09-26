@@ -57,6 +57,7 @@ void Luong::nhap() {
 }
 
 void Luong::xuat() const {
+    ThucThe::xuat();
     cout << "Ma luong: " << maLuong
          << " | Ma can bo: " << maCanBo
          << " | HSL: " << heSoLuong
@@ -67,6 +68,8 @@ void Luong::xuat() const {
          << " | Ly do: " << lyDoTangLuong
          << " | Thuc linh: " << tinhThucLinh() << endl;
 }
+
+string Luong::loaiThucThe() const { return "LICH_SU_LUONG"; }
 
 void Luong::ghiDong(ofstream& out) const {
     out << maLuong << '|' << maCanBo << '|' << heSoLuong << '|' << phuCap << '|'

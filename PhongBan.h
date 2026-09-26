@@ -6,7 +6,9 @@
 #include <fstream>
 using namespace std;
 
-class PhongBan {
+#include "ThucThe.h"
+
+class PhongBan : public ThucThe {
 private:
     string maPhong;
     string tenPhong;
@@ -19,10 +21,12 @@ private:
 public:
     PhongBan(const string& = "", const string& = "", const string& = "");
 
-    void nhap();
-    void xuat() const;
-    void ghiDong(ofstream& out) const;
-    void docDong(ifstream& in);
+    void nhap() override;
+    void xuat() const override;
+    void ghiDong(ofstream& out) const override;
+    void docDong(ifstream& in) override;
+
+    string loaiThucThe() const override;
 
     string GetMaPhong() const;
     string GetTenPhong() const;

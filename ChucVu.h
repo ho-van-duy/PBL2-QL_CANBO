@@ -6,7 +6,9 @@
 #include <fstream>
 using namespace std;
 
-class ChucVu {
+#include "ThucThe.h"
+
+class ChucVu : public ThucThe {
 private:
     string maChucVu;
     string tenChucVu;
@@ -19,10 +21,12 @@ private:
 
 public:
     ChucVu(const string& = "", const string& = "", const double& = 0.0, const string& ="");
-    void nhap();
-    void xuat() const;
-    void ghiDong(ofstream& out) const;
-    void docDong(ifstream& in);
+    void nhap() override;
+    void xuat() const override;
+    void ghiDong(ofstream& out) const override;
+    void docDong(ifstream& in) override;
+
+    string loaiThucThe() const override;
 
     string GetMaCV() const;
     string GetTenCV() const;

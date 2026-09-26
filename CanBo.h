@@ -6,7 +6,9 @@
 #include <fstream>
 using namespace std;
 
-class CanBo {
+#include "ThucThe.h"
+
+class CanBo : public ThucThe {
 private:
     string MaCanBo;
     string HoTen;
@@ -27,10 +29,12 @@ public:
         const string& = "", const string& = "", const string& = "", 
         const string& = "", const string& = "", const string& = "");
 
-    void nhap();
-    void xuat() const;
-    void ghiDong(ofstream& out) const;
-    void docDong(ifstream& in);
+    void nhap() override;
+    void xuat() const override;
+    void ghiDong(ofstream& out) const override;
+    void docDong(ifstream& in) override;
+
+    string loaiThucThe() const override;
 
     string GetMaCB() const;
     string GetTen() const;

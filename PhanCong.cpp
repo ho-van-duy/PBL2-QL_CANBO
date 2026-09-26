@@ -47,6 +47,7 @@ void PhanCong::nhap() {
 }
 
 void PhanCong::xuat() const {
+    ThucThe::xuat();
     cout << "Ma phan cong: " << maPhanCong
          << " | Ma can bo: " << maCanBo
          << " | Ma phong: " << maPhong
@@ -56,6 +57,8 @@ void PhanCong::xuat() const {
          << " | Loai: " << loaiPhanCong
          << " | Phong chinh: " << (laPhongChinh ? "co" : "khong") << endl;
 }
+
+string PhanCong::loaiThucThe() const { return "PHAN_CONG"; }
 
 void PhanCong::ghiDong(ofstream& out) const {
     out << maPhanCong << '|' << maCanBo << '|' << maPhong << '|' << maChucVu << '|'

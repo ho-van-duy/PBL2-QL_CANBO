@@ -33,6 +33,7 @@ void ThiDua::nhap() {
 }
 
 void ThiDua::xuat() const {
+    ThucThe::xuat();
     cout << "Ma su kien: " << maSuKien
          << " | Ma can bo: " << maCanBo
          << " | Loai: " << loaiSuKien
@@ -40,6 +41,8 @@ void ThiDua::xuat() const {
          << " | Nam: " << nam
          << " | Ly do: " << lyDo << endl;
 }
+
+string ThiDua::loaiThucThe() const { return "KHEN_THUONG_KY_LUAT"; }
 
 void ThiDua::ghiDong(ofstream& out) const {
     out << maSuKien << '|' << maCanBo << '|' << loaiSuKien << '|'

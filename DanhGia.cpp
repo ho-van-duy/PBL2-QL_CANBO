@@ -27,6 +27,7 @@ void DanhGia::nhap() {
 }
 
 void DanhGia::xuat() const {
+    ThucThe::xuat();
     cout << "Ma danh gia: " << maDanhGia
          << " | Ma can bo: " << maCanBo
          << " | Xep loai: " << xepLoai
@@ -34,6 +35,8 @@ void DanhGia::xuat() const {
          << " | Ngay danh gia: " << ngayDanhGia
          << endl;
 }
+
+string DanhGia::loaiThucThe() const { return "DANH_GIA"; }
 
 void DanhGia::ghiDong(ofstream& out) const {
     out << maDanhGia << '|' << maCanBo << '|' << xepLoai << '|' << nhanXet << '|' << ngayDanhGia << endl;

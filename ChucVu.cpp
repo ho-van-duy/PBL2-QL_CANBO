@@ -28,11 +28,14 @@ void ChucVu::nhap() {
 }
 
 void ChucVu::xuat() const {
+    ThucThe::xuat();
     cout << "Ma chuc vu: " << maChucVu
          << " | Ten chuc vu: " << tenChucVu
          << " | Phu cap chuc vu: " << phuCapChucVu
          << " | Mo ta: " << moTa << endl;
 }
+
+string ChucVu::loaiThucThe() const { return "CHUC_VU"; }
 
 void ChucVu::ghiDong(ofstream& out) const {
     out << maChucVu << '|' << tenChucVu << '|' << phuCapChucVu << '|' << moTa << endl;

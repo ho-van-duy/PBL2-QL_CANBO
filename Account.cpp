@@ -51,7 +51,7 @@ void Account::input() {
     cin.ignore();
 }
 
-void Account::display() {
+void Account::display() const {
     cout << "Ma tai khoan: " << maTaiKhoan
         << " | Username: " << username
         << " | Password: " << password
@@ -59,6 +59,12 @@ void Account::display() {
         << " | Trang thai: " << (trangThai ? "HoatDong" : "BiKhoa")
         << " | Ma can bo: " << maCanBo << endl;
 }
+
+void Account::nhap() { input(); }
+
+void Account::xuat() const { ThucThe::xuat(); display(); }
+
+string Account::loaiThucThe() const { return "TAI_KHOAN"; }
 
 void Account::Them(const Account& a) {
     if (soLuong == sucChua) {

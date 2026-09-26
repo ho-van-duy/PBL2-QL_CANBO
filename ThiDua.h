@@ -6,7 +6,9 @@
 #include <fstream>
 using namespace std;
 
-class ThiDua {
+#include "ThucThe.h"
+
+class ThiDua : public ThucThe {
 private:
     string maSuKien;
     string maCanBo;
@@ -23,10 +25,12 @@ public:
     ThiDua(const string& = "", const string& = "", const string& = "",
            const string& = "", const int& = 0, const string& = "");
 
-    void nhap();
-    void xuat() const;
-    void ghiDong(ofstream& out) const;
-    void docDong(ifstream& in);
+    void nhap() override;
+    void xuat() const override;
+    void ghiDong(ofstream& out) const override;
+    void docDong(ifstream& in) override;
+
+    string loaiThucThe() const override;
 
     string GetMaSK() const;
     string GetMaCanBo() const;

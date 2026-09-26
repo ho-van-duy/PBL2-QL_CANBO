@@ -17,10 +17,13 @@ void PhongBan::nhap() {
 }
 
 void PhongBan::xuat() const {
+    ThucThe::xuat();
     cout << "Ma phong: " << maPhong
          << " | Ten phong: " << tenPhong
          << " | Mo ta: " << moTa << endl;
 }
+
+string PhongBan::loaiThucThe() const { return "PHONG_BAN"; }
 
 void PhongBan::ghiDong(ofstream& out) const {
     out << maPhong << '|' << tenPhong << '|' << moTa << endl;

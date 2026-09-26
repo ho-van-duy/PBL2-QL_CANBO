@@ -7,7 +7,9 @@
 
 using namespace std;
 
-class Account {
+#include "ThucThe.h"
+
+class Account : public ThucThe {
     private:
         string maTaiKhoan;
         string username;
@@ -38,11 +40,15 @@ class Account {
         void setTrangThai(const bool&);
         void setMaCanBo(const string&);
 
-        void ghiDong(ofstream& out) const;
-        void docDong(ifstream& in);
+        void ghiDong(ofstream& out) const override;
+        void docDong(ifstream& in) override;
 
         void input();
-        void display();
+        void display() const;
+
+        void nhap() override;
+        void xuat() const override;
+        string loaiThucThe() const override;
 
         static int SoLuong() { return soLuong; }
         static void Them(const Account& a);
