@@ -636,3 +636,4 @@ void xuatTatCa(ThucThe* ds[], int n) {
 
 *Tài liệu này là nguồn tri thức chính thức của dự án. Mọi thiết kế (ERD, Class Diagram, code, báo cáo) phải nhất quán với mô hình 8 bảng được mô tả ở trên.*
 # PBL2-QL_CANBO
+# PBL2-QL_CANBO
