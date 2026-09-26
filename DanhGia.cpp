@@ -5,24 +5,14 @@ DanhGia* DanhGia::ds = nullptr;
 int DanhGia::soLuong = 0;
 int DanhGia::sucChua = 0;
 
-DanhGia::DanhGia(const string& maDanhGia, const string& maCanBo, const int& namDanhGia,
-                 const string& xepLoai, const string& nhanXet, const string& ngayDanhGia)
-    : maDanhGia(maDanhGia), maCanBo(maCanBo), namDanhGia(namDanhGia),
+DanhGia::DanhGia(const string& maDanhGia, const string& maCanBo, const string& xepLoai,
+                 const string& nhanXet, const string& ngayDanhGia)
+    : maDanhGia(maDanhGia), maCanBo(maCanBo),
       xepLoai(xepLoai), nhanXet(nhanXet), ngayDanhGia(ngayDanhGia) { }
 
 void DanhGia::nhap() {
     cout << "Nhap ma can bo: ";
     getline(cin, maCanBo);
-    do {
-        cout << "Nhap nam danh gia: ";
-        if (!(cin >> namDanhGia)) {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            namDanhGia = 0;
-            continue;
-        }
-        cin.ignore(1000, '\n');
-    } while (namDanhGia <= 0);
     do {
         cout << "Nhap xep loai (Gioi/Kha/TrungBinh/Yeu): ";
         getline(cin, xepLoai);
@@ -39,7 +29,6 @@ void DanhGia::nhap() {
 void DanhGia::xuat() const {
     cout << "Ma danh gia: " << maDanhGia
          << " | Ma can bo: " << maCanBo
-         << " | Nam: " << namDanhGia
          << " | Xep loai: " << xepLoai
          << " | Nhan xet: " << nhanXet
          << " | Ngay danh gia: " << ngayDanhGia
@@ -47,16 +36,12 @@ void DanhGia::xuat() const {
 }
 
 void DanhGia::ghiDong(ofstream& out) const {
-    out << maDanhGia << '|' << maCanBo << '|' << namDanhGia << '|'
-        << xepLoai << '|' << nhanXet << '|' << ngayDanhGia << endl;
+    out << maDanhGia << '|' << maCanBo << '|' << xepLoai << '|' << nhanXet << '|' << ngayDanhGia << endl;
 }
 
 void DanhGia::docDong(ifstream& in) {
     getline(in, maDanhGia, '|');
     getline(in, maCanBo, '|');
-    string namStr;
-    getline(in, namStr, '|');
-    if (!namStr.empty()) namDanhGia = stoi(namStr);
     getline(in, xepLoai, '|');
     getline(in, nhanXet, '|');
     getline(in, ngayDanhGia);
@@ -64,14 +49,12 @@ void DanhGia::docDong(ifstream& in) {
 
 string DanhGia::GetMaDG() const { return maDanhGia; }
 string DanhGia::GetMaCanBo() const { return maCanBo; }
-int DanhGia::GetNamDG() const { return namDanhGia; }
 string DanhGia::GetXepLoai() const { return xepLoai; }
 string DanhGia::GetNhanXet() const { return nhanXet; }
 string DanhGia::GetNgayDanhGia() const { return ngayDanhGia; }
 
 void DanhGia::SetMaDG(const string& maDanhGia) { this->maDanhGia = maDanhGia; }
 void DanhGia::SetMaCanBo(const string& maCanBo) { this->maCanBo = maCanBo; }
-void DanhGia::SetNamDG(const int& namDanhGia) { this->namDanhGia = namDanhGia; }
 void DanhGia::SetXepLoai(const string& xepLoai) { this->xepLoai = xepLoai; }
 void DanhGia::SetNhanXet(const string& nhanXet) { this->nhanXet = nhanXet; }
 void DanhGia::SetNgayDanhGia(const string& ngayDanhGia) { this->ngayDanhGia = ngayDanhGia; }

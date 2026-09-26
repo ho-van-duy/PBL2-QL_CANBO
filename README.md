@@ -48,7 +48,7 @@ Hệ thống được xây dựng bằng ngôn ngữ **C++**, lưu trữ in-memo
 | 4 | Đếm số cán bộ nữ | Thống kê theo giới tính |
 | 5 | Tính tổng thu nhập toàn bộ cán bộ | Tổng `Thực lĩnh` của danh sách |
 | 6 | Liệt kê cán bộ chuyên môn "Công nghệ thông tin" | Lọc theo `ChuyenMon` |
-| 7 | Hiển thị cán bộ xếp loại lao động "Giỏi" | Lọc theo bản đánh giá mới nhất |
+| 7 | Hiển thị cán bộ xếp loại lao động "Giỏi" | Lọc theo bản đánh giá mới nhất (theo `NgayDanhGia`) |
 | 8 | Sắp xếp danh sách theo mã cán bộ | Tăng/giảm dần |
 | 9 | Xóa cán bộ theo mã | Xóa mềm (giữ lịch sử) |
 | 10 | Thêm cán bộ vào danh sách | Thêm 1 cán bộ mới |
@@ -89,7 +89,7 @@ Không chỉ lưu **trạng thái hiện tại** mà còn lưu **lịch sử qu�
 - **C1** `DenNgay = NULL` ⇔ bản ghi **đang hiệu lực** (không có ngày kết thúc).
 - **C2** Một cán bộ có nhiều nhất **1 phòng chính hiệu lực** tại một thời điểm → kiểm tra overlap khi thêm `PHAN_CONG` (`LaPhongChinh = 1`).
 - **C3** Các bảng có `TuNgay/DenNgay` phải **không chồng thời gian** với bản ghi cùng loại của cùng cán bộ.
-- **C4** `UNIQUE(MaCanBo, NamDanhGia)` — một cán bộ chỉ có 1 bản đánh giá trong một năm.
+- **C4** `UNIQUE(MaCanBo, NgayDanhGia)` — một cán bộ chỉ có 1 bản đánh giá trong một ngày.
 - **C5** `HeSoLuong > 0`, `PhuCap >= 0`, `AnTrua >= 0`.
 - **C6** Giá trị liệt kê: `GioiTinh` ∈ {Nam, Nu}; `TrangThai` ∈ {DangLamViec, NghiViec}; `LoaiPhanCong` ∈ {ChinhThuc, KiemNhiem, DieuChuyen, BoNhiem, MienNhiem}; `XepLoai` ∈ {Gioi, Kha, TrungBinh, Yeu}; `LoaiSuKien` ∈ {KHEN_THUONG, KY_LUAT}; `VaiTro` ∈ {ADMIN, USER}.
 - **C7** Cán bộ **đến hạn nâng lương**: chênh lệch từ lần tăng lương gần nhất (hoặc ngày vào làm nếu chưa tăng) **≥ chu kỳ cố định 3 năm** (`CHU_KY_NANG_LUONG = 3`).
@@ -169,9 +169,8 @@ Không chỉ lưu **trạng thái hiện tại** mà còn lưu **lịch sử qu�
   │ TuNgay      │                 ┌──────────────────┐
   │ DenNgay     │            N    │  DANH_GIA        │
   │ LyDoTangLuong│────────────────│──────────────────│
-  └─────────────┘  1 → N          │ MaDanhGia    PK  │
+└─────────────┘  1 → N          │ MaDanhGia    PK  │
                                    │ MaCanBo      FK  │
-                       1 → N       │ NamDanhGia       │
         ┌──────────────────────────┤ XepLoai         │
         │                          │ NhanXet         │
         │   ┌───────────────────── │ NgayDanhGia     │
@@ -283,10 +282,9 @@ Không chỉ lưu **trạng thái hiện tại** mà còn lưu **lịch sử qu�
 |---|---|---|---|
 | `MaDanhGia` | VARCHAR | **PK** | Mã bản đánh giá |
 | `MaCanBo` | VARCHAR | **FK → CAN_BO** | Cán bộ |
-| `NamDanhGia` | INT | C4 | Năm đánh giá |
 | `XepLoai` | VARCHAR | C6 | "Gioi", "Kha", "TrungBinh", "Yeu" |
 | `NhanXet` | VARCHAR | — | Nhận xét |
-| `NgayDanhGia` | DATE | — | Ngày đánh giá |
+| `NgayDanhGia` | DATE | C4 | Ngày đánh giá |
 
 ### 5.7 KHEN_THUONG_KY_LUAT — Khen thưởng & Kỷ luật (gộp) (class `ThiDua`)
 
@@ -346,7 +344,7 @@ ThucLinh = (HeSoLuong + PhuCap) * 1.490.000 + AnTrua
 | Ăn trưa | `LUONG.AnTrua` |
 | **Thực lĩnh** | **Tính toán** `= (HSL + PC) * 1.490.000 + AnTrua` |
 | Năm tăng lương | `LUONG.TuNgay` (lần tăng gần nhất) |
-| Xếp loại lao động | `DANH_GIA.XepLoai` (bản mới nhất) |
+| Xếp loại lao động | `DANH_GIA.XepLoai` (bản mới nhất theo `NgayDanhGia`) |
 
 ---
 
@@ -405,11 +403,10 @@ CREATE TABLE LICH_SU_LUONG (
 CREATE TABLE DANH_GIA (
     MaDanhGia    VARCHAR(10) PRIMARY KEY,
     MaCanBo      VARCHAR(10) NOT NULL REFERENCES CAN_BO(MaCanBo),
-    NamDanhGia   INT,
     XepLoai      VARCHAR(20) CHECK (XepLoai IN ('Gioi','Kha','TrungBinh','Yeu')),
     NhanXet      VARCHAR(200),
     NgayDanhGia  DATE,
-    UNIQUE (MaCanBo, NamDanhGia)
+    UNIQUE (MaCanBo, NgayDanhGia)
 );
 
 CREATE TABLE KHEN_THUONG_KY_LUAT (

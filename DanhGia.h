@@ -10,7 +10,6 @@ class DanhGia {
 private:
     string maDanhGia;
     string maCanBo;
-    int namDanhGia;
     string xepLoai;
     string nhanXet;
     string ngayDanhGia;
@@ -20,8 +19,7 @@ private:
     static int sucChua;
 
 public:
-    DanhGia(const string& = "", const string& = "", const int& = 0,
-            const string& = "", const string& = "", const string& = "");
+    DanhGia(const string& = "", const string& = "", const string& = "", const string& = "", const string& = "");
 
     void nhap();
     void xuat() const;
@@ -30,14 +28,12 @@ public:
 
     string GetMaDG() const;
     string GetMaCanBo() const;
-    int GetNamDG() const;
     string GetXepLoai() const;
     string GetNhanXet() const;
     string GetNgayDanhGia() const;
 
     void SetMaDG(const string&);
     void SetMaCanBo(const string&);
-    void SetNamDG(const int&);
     void SetXepLoai(const string&);
     void SetNhanXet(const string&);
     void SetNgayDanhGia(const string&);
