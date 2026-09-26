@@ -8,7 +8,7 @@ class NghiepVu {
 public:
     // Khởi tạo & đăng nhập
     static void khoiTao();
-    static bool dangNhap(string& vaiTro);
+    static bool dangNhap(string& vaiTro, string& maCanBo);
 
     // Hàm tiện ích
     static string sinhMaTuDong(const string& loai);
@@ -24,6 +24,13 @@ public:
     static void sapXepTheoMa(bool tang);
     static void xoaCanBoTheoMa();
     static void themMotCanBo();
+    static void suaThongTinCanBo();
+
+    // Xem thông tin theo mã cán bộ (dùng cho menu USER)
+    static void xemThongTinCaNhan(const string& maCanBo);
+    static void xemLuongCaNhan(const string& maCanBo);
+    static void xemDanhGiaCaNhan(const string& maCanBo);
+    static void xemPhanCongCaNhan(const string& maCanBo);
 
     // Tìm kiếm theo tên
     static void timKiemCanBoTheoTen();

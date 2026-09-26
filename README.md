@@ -459,8 +459,9 @@ Chương trình thể hiện đầy đủ **4 tính chất cơ bản của lập
 - **`PHAN_CONG` nhập tay đầy đủ**: người dùng chọn `MaCanBo`, `MaPhong`, `MaChucVu` từ danh sách hiện có và nhập `TuNgay`, `DenNgay` (để trống = hiệu lực), `LoaiPhanCong`, `LaPhongChinh` (0/1). `NghiepVu` vẫn kiểm tra ràng buộc C2/C3.
 - **Giới tính**: chỉ nhận `Nam` hoặc `Nu` (`CanBo::nhap()` validate, nhập khác → hỏi lại).
 - **Chu kỳ nâng lương cố định `CHU_KY_NANG_LUONG = 3`** (năm) — áp dụng trong `NghiepVu::lietKeDenHanTangLuong()`.
-- **Đăng nhập**: 1 class `Account` (`VaiTro = ADMIN/USER`), mật khẩu lưu rõ ràng (demo), đăng nhập qua `NghiepVu::dangNhap()`. **Tài khoản mặc định demo**: `admin / admin` (ADMIN) và `user / user` (USER).
+- **Đăng nhập**: 1 class `Account` (`VaiTro = ADMIN/USER`), mật khẩu lưu rõ ràng (demo), đăng nhập qua `NghiepVu::dangNhap(vaiTro, maCanBo)` (trả về cả vai trò lẫn mã cán bộ liên kết để menu USER dùng). **Tài khoản mặc định demo**: `admin / admin` (ADMIN) và `user / user` (USER).
 - **Gộp nghiệp vụ 1 module `NghiepVu`**: toàn bộ 10 chức năng + đăng nhập + `sinhMaTuDong`/`timXTheoMa`/`timKiemCanBoTheoTen`/`dateThanhSo`/`giaoNhau` là **hàm tĩnh** của 1 class `NghiepVu` (không cần tách 5 service vì mọi danh sách đã là `static` trong từng model).
+- **Hàm phục vụ menu (B14)**: `suaThongTinCanBo()` (giữ nguyên mã, nhập lại 7 trường) và 4 hàm `xem...CaNhan(maCanBo)` — `xemThongTinCaNhan`, `xemLuongCaNhan`, `xemDanhGiaCaNhan`, `xemPhanCongCaNhan` — trong đó `xemLuongTheoCanBo()` / `xemDanhGiaTheoCanBo()` chỉ việc hỏi mã rồi gọi lại hàm `...CaNhan` (không lặp code).
 
 ### 8.3 Cấu trúc thư mục (1 mô-đun = 1 cặp `.h` + `.cpp`, phẳng tại thư mục gốc)
 
@@ -523,10 +524,29 @@ QL_CANBO/
 0. Đăng xuất
 ```
 
+Menu 2 chi tiết theo nhóm, ví dụ nhóm 1 và 11 (mỗi nhóm có mục `0. Quay lai`):
+
+```
+--- QUAN LY CAN BO ---          --- QUAN LY TAI KHOAN ---
+1. Them mot can bo              1. Tao tai khoan moi
+2. Them nhieu can bo            2. Xem danh sach tai khoan
+3. Xem danh sach can bo         3. Khoa / mo khoa tai khoan
+4. Sua thong tin can bo         0. Quay lai
+5. Xoa can bo theo ma
+0. Quay lai
+```
+
+Cơ chế vòng lặp chính của `main.cpp` (B14):
+
+- `NghiepVu::khoiTao()` nạp 8 file `data/*.txt`, tạo 2 tài khoản demo nếu chưa có.
+- Vòng lặp ngoài: đăng nhập → theo `VaiTro` mở `menuAdmin()` hoặc `menuUser(maCanBo)` → chọn `0` để đăng xuất rồi đăng nhập lại (tối đa 3 lần thử, sai thì kết thúc chương trình).
+- Hàm `chonMenu(ten, min, max)` chỉ đọc 1 số nguyên rồi `cin.ignore(1000, '\n')` để `getline()` của model không bị nuốt dòng; trả `-1` khi hết EOF nên chương trình thoát gọn thay vì quay vô hạn.
+- USER dùng `maCanBo` lấy từ `NghiepVu::dangNhap()` cho 4 mục "của bản thân"; tài khoản chưa liên kết cán bộ sẽ được báo rõ.
+
 ### 8.5 Cách biên dịch
 
 ```bash
-g++ *.cpp -o QLCB.exe
+g++ -std=c++11 -Wall -Wextra *.cpp -o QLCB.exe
 ```
 
 ### 8.6 Liên kết giữa các thực thể & phép join runtime
@@ -627,9 +647,9 @@ void xuatTatCa(ThucThe* ds[], int n) {
 | 10 | Code `Vector` mảng động | ✅ `Vector` int-array (guard + ném `out_of_range`) |
 | 11 | Code lớp nền `ThucThe` + hàm tiện ích (sinh mã, tìm kiếm) | ✅ `ThucThe` xong (8 model kế thừa + override); hàm sinh mã/tìm kiếm nằm trong `NghiepVu` (B12, §8.2) |
 | 12 | Code nghiệp vụ (`NghiepVu` — gộp 1 module) | ✅ Xong: `khoiTao` + `dangNhap` + `sinhMaTuDong` + 10 chức năng + tìm kiếm theo tên + quản lý 7 nhóm tài nguyên + `thongKeBaoCao` |
-| 13 | Code search/sort/statistics | ⏳ |
-| 14 | UI/menu + đăng nhập | ⏳ |
-| 15 | Kiểm thử (bao gồm đa hình qua `ThucThe*`) & báo cáo | ⏳ |
+| 13 | Code search/sort/statistics | ✅ Gộp trong `NghiepVu` (B12): `timKiemCanBoTheoTen`, `sapXepTheoMa` (QuickSort tăng/giảm), `hienThiDanhSach`, `lietKeDenHanTangLuong`, `demCanBoNu`, `tongThuNhap`, `lietKeCanBoCNTT`, `lietKeCanBoGioi`, `thongKeBaoCao` |
+| 14 | UI/menu + đăng nhập | ✅ `main.cpp`: banner, đăng nhập (tối đa 3 lần), `menuAdmin()` 11 mục + `menuUser()` 6 mục theo §8.4, 7 submenu nhóm, `chonMenu()` an toàn EOF |
+| 15 | Kiểm thử (bao gồm đa hình qua `ThucThe*`) & báo cáo | ⏳ Còn lại: `ThucThe*` (đa hình runtime) chưa có nơi dùng thật + mục báo cáo tổng hợp |
 
 ---
 

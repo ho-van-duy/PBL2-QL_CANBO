@@ -54,7 +54,7 @@ void NghiepVu::khoiTao() {
     }
 }
 
-bool NghiepVu::dangNhap(string& vaiTro) {
+bool NghiepVu::dangNhap(string& vaiTro, string& maCanBo) {
     string username, password;
     cout << "Nhap ten dang nhap: ";
     cin >> username;
@@ -70,6 +70,7 @@ bool NghiepVu::dangNhap(string& vaiTro) {
                 return false;
             }
             vaiTro = a.getRole();
+            maCanBo = a.getMaCanBo();
             return true;
         }
     }
@@ -227,7 +228,7 @@ void NghiepVu::themMotCanBo() {
 }
 
 void NghiepVu::themNhieuCanBo() {
-    int n;
+    int n = 0;
     cout << "Nhap so can bo: ";
     cin >> n;
     cin.ignore(1000, '\n');
@@ -391,6 +392,73 @@ void NghiepVu::xoaCanBoTheoMa() {
     CanBo::LayTai(idx).SetTrangThai("NghiViec");
     CanBo::GhiTatCa();
     cout << "Da xoa mem can bo " << ma << " (trang thai NghiViec).\n";
+}
+
+void NghiepVu::suaThongTinCanBo() {
+    string ma;
+    cout << "Nhap ma can bo can sua: ";
+    cin >> ma;
+    cin.ignore(1000, '\n');
+    int idx = timCanBoTheoMa(ma);
+    if (idx < 0) {
+        cout << "Khong tim thay can bo " << ma << "!\n";
+        return;
+    }
+    cout << "Nhap lai thong tin (giu nguyen ma " << ma << "):\n";
+    CanBo c;
+    c.nhap();
+    c.SetMaCB(ma);
+    CanBo::LayTai(idx) = c;
+    CanBo::GhiTatCa();
+    cout << "Da cap nhat thong tin can bo " << ma << "!\n";
+}
+
+void NghiepVu::xemThongTinCaNhan(const string& maCanBo) {
+    int idx = timCanBoTheoMa(maCanBo);
+    if (idx < 0) {
+        cout << "Tai khoan nay chua lien ket can bo nao!\n";
+        return;
+    }
+    CanBo& cb = CanBo::LayTai(idx);
+    cb.xuat();
+    for (int j = 0; j < PhanCong::SoLuong(); j++) {
+        PhanCong& pc = PhanCong::LayTai(j);
+        if (pc.getMaCanBo() == maCanBo && pc.HieuLuc())
+            pc.xuat();
+    }
+}
+
+void NghiepVu::xemLuongCaNhan(const string& maCanBo) {
+    int dem = 0;
+    for (int i = 0; i < Luong::SoLuong(); i++) {
+        if (Luong::LayTai(i).getMaCanBo() == maCanBo) {
+            Luong::LayTai(i).xuat();
+            dem++;
+        }
+    }
+    if (dem == 0) cout << "Chua co ban luong nao!\n";
+}
+
+void NghiepVu::xemDanhGiaCaNhan(const string& maCanBo) {
+    int dem = 0;
+    for (int i = 0; i < DanhGia::SoLuong(); i++) {
+        if (DanhGia::LayTai(i).GetMaCanBo() == maCanBo) {
+            DanhGia::LayTai(i).xuat();
+            dem++;
+        }
+    }
+    if (dem == 0) cout << "Chua co danh gia nao!\n";
+}
+
+void NghiepVu::xemPhanCongCaNhan(const string& maCanBo) {
+    int dem = 0;
+    for (int i = 0; i < PhanCong::SoLuong(); i++) {
+        if (PhanCong::LayTai(i).getMaCanBo() == maCanBo) {
+            PhanCong::LayTai(i).xuat();
+            dem++;
+        }
+    }
+    if (dem == 0) cout << "Chua co phan cong nao!\n";
 }
 
 void NghiepVu::timKiemCanBoTheoTen() {
@@ -565,14 +633,7 @@ void NghiepVu::xemLuongTheoCanBo() {
     cout << "Nhap ma can bo: ";
     cin >> ma;
     cin.ignore(1000, '\n');
-    int dem = 0;
-    for (int i = 0; i < Luong::SoLuong(); i++) {
-        if (Luong::LayTai(i).getMaCanBo() == ma) {
-            Luong::LayTai(i).xuat();
-            dem++;
-        }
-    }
-    if (dem == 0) cout << "Can bo " << ma << " chua co luong.\n";
+    xemLuongCaNhan(ma);
 }
 
 void NghiepVu::themDanhGia() {
@@ -595,14 +656,7 @@ void NghiepVu::xemDanhGiaTheoCanBo() {
     cout << "Nhap ma can bo: ";
     cin >> ma;
     cin.ignore(1000, '\n');
-    int dem = 0;
-    for (int i = 0; i < DanhGia::SoLuong(); i++) {
-        if (DanhGia::LayTai(i).GetMaCanBo() == ma) {
-            DanhGia::LayTai(i).xuat();
-            dem++;
-        }
-    }
-    if (dem == 0) cout << "Can bo " << ma << " chua co danh gia.\n";
+    xemDanhGiaCaNhan(ma);
 }
 
 void NghiepVu::themThiDua() {
@@ -632,7 +686,7 @@ void NghiepVu::xemThiDuaTheoCanBo() {
             dem++;
         }
     }
-    if (dem == 0) cout << "Can bo " << ma << " chua co khen thuong/ky luat.\n";
+    if (dem == 0) cout << "Chua co khen thuong/ky luat nao!\n";
 }
 
 void NghiepVu::themTaiKhoan() {
