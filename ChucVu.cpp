@@ -9,8 +9,6 @@ ChucVu::ChucVu(const string& maChucVu, const string& tenChucVu, const double& ph
     : maChucVu(maChucVu), tenChucVu(tenChucVu), phuCapChucVu(phuCapChucVu), moTa(moTa) { }
 
 void ChucVu::nhap() {
-    cout << "Nhap ma chuc vu: ";
-    getline(cin, maChucVu);
     cout << "Nhap ten chuc vu: ";
     getline(cin, tenChucVu);
     do {

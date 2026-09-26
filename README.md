@@ -439,9 +439,9 @@ Chương trình thể hiện đầy đủ **4 tính chất cơ bản của lập
 | Tính chất | Cách thể hiện trong đồ án |
 |---|---|
 | **Encapsulation** (đóng gói) | Mọi thuộc tính của mỗi thực thể là `private`, truy cập duy nhất qua getter/setter. Tầng nghiệp vụ `NghiepVu` chỉ gọi qua interface (`GetMaCB()`, `HieuLuc()`, `Them()`, `LayTai()`...), không bao giờ đụng trực tiếp field. Trạng thái "đang hiệu lực" được giấu sau `HieuLuc()` |
-| **Abstraction** (trừu tượng) | Lớp nền `ThucThe` định nghĩa **bộ 4 hành vi chung** (`nhap`, `xuat`, `ghiDong`, `docDong`) cho mọi thực thể; tầng nghiệp vụ `NghiepVu` phơi ra API nghiệp vụ (`tongThuNhap()`, `demCanBoNu()`, `dangNhap()`...) — người gọi (main) không cần biết chi tiết lưu trữ |
-| **Inheritance** (kế thừa) | Lớp nền trừu tượng `ThucThe` (`virtual` + pure virtual) → **8 model kế thừa** `: public ThucThe` và `override` 4 hành vi chung. `Account` ánh xạ `nhap()/xuat()` sang `input()/display()` riêng của nó |
-| **Polymorphism** (đa hình) | `virtual/override` trong `ThucThe` cho phép gọi `xuat()`/`ghiDong()` qua con trỏ `ThucThe*` — cùng một lệnh nhưng chạy đúng hành vi của từng loại thực thể (xem §8.6). Ngoài ra có **nạp chồng toán tử** (`PhanCong::operator==`, `Vector::operator[]`) |
+| **Abstraction** (trừu tượng) | Lớp nền `ThucThe` định nghĩa **bộ hành vi chung**: 3 pure virtual buộc con hiện thực (`nhap`, `ghiDong`, `docDong`) + `xuat()` **có thân mặc định** gọi `loaiThucThe()` (nạp nhãn loại); tầng nghiệp vụ `NghiepVu` phơi ra API nghiệp vụ (`tongThuNhap()`, `demCanBoNu()`, `dangNhap()`...) — người gọi (main) không cần biết chi tiết lưu trữ |
+| **Inheritance** (kế thừa) | 8 model kế thừa `: public ThucThe` và `override` các hành vi. Đặc biệt mỗi `xuat()` của lớp con **gọi lại `ThucThe::xuat()`** ở đầu thân hàm → tái sử dụng mã của cha (dòng nhãn `----- CAN_BO -----`) rồi in thêm phần riêng. `Account` ánh xạ `nhap()/xuat()` sang `input()/display()` riêng của nó |
+| **Polymorphism** (đa hình) | Gọi `xuat()` qua con trỏ `ThucThe*` sẽ dispatch đúng bản của từng loại thực thể (xem §8.6); **đa hình xảy ra ngay trong thân `ThucThe::xuat()`**: nó gọi `loaiThucThe()` (pure virtual) → compiler gọi đúng bản `CAN_BO`, `PHONG_BAN`, … Ngoài ra có **nạp chồng toán tử** (`PhanCong::operator==`, `Vector::operator[]`) |
 
 - **Association**: các class liên kết qua khóa (mã ID) — `CanBo` ↔ `PhanCong`, `PhanCong` ↔ `PhongBan`, `PhanCong` ↔ `ChucVu` (KHÔNG nhúng giá trị đối tượng).
 - **Aggregation**: `PhongBan` chứa nhiều `CanBo` thông qua `PhanCong`; mỗi class entity **tự quản danh sách tĩnh mảng động** của chính nó (`static T* ds; static int soLuong; static int sucChua;` + `Them/XoaMot/LayTai/SoLuong/DocTatCa/GhiTatCa`) bằng `new[]/delete[]` + **nhân đôi khi đầy** → thể hiện rõ encapsulation + phân tích độ phức tạp. Mô-đun `Vector` (mảng `int` động, rule of three) giữ nguyên làm ví dụ minh họa.
@@ -454,12 +454,13 @@ Chương trình thể hiện đầy đủ **4 tính chất cơ bản của lập
 
 ### 8.2 Quy tắc triển khai đã chốt
 
-- **Mã khóa tự sinh** (hàm tiện ích trong `NghiepVu`, dựa trên `SoLuong()` của từng danh sách) — người dùng không nhập mã → đảm bảo PK unique: `CB001…`, `P01…`, `CV01…`, `PC001…`, `ML001…`, `DG001…`, `SK001…`, `TK001…`. Kèm hàm tiện ích **`timTheoMa(...)`** tìm bản ghi theo mã (linear search, xem §9.1).
+- **Mã khóa tự sinh** (hàm `NghiepVu::sinhMaTuDong(loai)`: quét hậu tố lớn nhất của danh sách tương ứng rồi + 1, đệm `0` cho đủ độ dài) — người dùng không nhập mã → đảm bảo PK unique: `CB001…`, `P01…`, `CV01…`, `PC001…`, `ML001…`, `DG001…`, `SK001…`, `TK001…`. Kèm các hàm tiện ích **private `timXTheoMa(...)`** (8 bảng) tìm chỉ số bản ghi theo mã (linear search, xem §9.1), dùng nội bộ cho xóa theo mã + kiểm tra khóa ngoại.
+- **Tìm kiếm cán bộ theo TÊN**: `NghiepVu::timKiemCanBoTheoTen()` — không phân biệt hoa/thường, khớp chuỗi con, in ra **nhiều** kết quả.
 - **`PHAN_CONG` nhập tay đầy đủ**: người dùng chọn `MaCanBo`, `MaPhong`, `MaChucVu` từ danh sách hiện có và nhập `TuNgay`, `DenNgay` (để trống = hiệu lực), `LoaiPhanCong`, `LaPhongChinh` (0/1). `NghiepVu` vẫn kiểm tra ràng buộc C2/C3.
 - **Giới tính**: chỉ nhận `Nam` hoặc `Nu` (`CanBo::nhap()` validate, nhập khác → hỏi lại).
 - **Chu kỳ nâng lương cố định `CHU_KY_NANG_LUONG = 3`** (năm) — áp dụng trong `NghiepVu::lietKeDenHanTangLuong()`.
 - **Đăng nhập**: 1 class `Account` (`VaiTro = ADMIN/USER`), mật khẩu lưu rõ ràng (demo), đăng nhập qua `NghiepVu::dangNhap()`. **Tài khoản mặc định demo**: `admin / admin` (ADMIN) và `user / user` (USER).
-- **Gộp nghiệp vụ 1 module `NghiepVu`**: toàn bộ 10 chức năng + đăng nhập + `sinhMaTuDong`/`timTheoMa` là **hàm tĩnh** của 1 class `NghiepVu` (không cần tách 5 service vì mọi danh sách đã là `static` trong từng model).
+- **Gộp nghiệp vụ 1 module `NghiepVu`**: toàn bộ 10 chức năng + đăng nhập + `sinhMaTuDong`/`timXTheoMa`/`timKiemCanBoTheoTen`/`dateThanhSo`/`giaoNhau` là **hàm tĩnh** của 1 class `NghiepVu` (không cần tách 5 service vì mọi danh sách đã là `static` trong từng model).
 
 ### 8.3 Cấu trúc thư mục (1 mô-đun = 1 cặp `.h` + `.cpp`, phẳng tại thư mục gốc)
 
@@ -547,7 +548,8 @@ Ví dụ join 2 bảng (chức năng 5 — tổng thu nhập): duyệt `CAN_BO`,
 
 ```cpp
 void xuatTatCa(ThucThe* ds[], int n) {
-    for (int i = 0; i < n; i++) ds[i]->xuat(); // gọi đúng xuat() của từng loại thật
+    for (int i = 0; i < n; i++) ds[i]->xuat(); // dispatch đúng xuat() của từng loại;
+                                               // mỗi xuat() con gọi ThucThe::xuat() → in nhãn loại
 }
 ```
 
@@ -623,8 +625,8 @@ void xuatTatCa(ThucThe* ds[], int n) {
 | 8 | Thiết kế lưu trữ file | ✅ Mục 10 |
 | 9 | Code model/class | ✅ 8 model xong (mỗi class tự quản danh sách + file I/O) |
 | 10 | Code `Vector` mảng động | ✅ `Vector` int-array (guard + ném `out_of_range`) |
-| 11 | Code lớp nền `ThucThe` + hàm tiện ích (sinh mã, tìm kiếm) | ⏳ |
-| 12 | Code nghiệp vụ (`NghiepVu` — gộp 1 module) | ⏳ |
+| 11 | Code lớp nền `ThucThe` + hàm tiện ích (sinh mã, tìm kiếm) | ✅ `ThucThe` xong (8 model kế thừa + override); hàm sinh mã/tìm kiếm nằm trong `NghiepVu` (B12, §8.2) |
+| 12 | Code nghiệp vụ (`NghiepVu` — gộp 1 module) | ✅ Xong: `khoiTao` + `dangNhap` + `sinhMaTuDong` + 10 chức năng + tìm kiếm theo tên + quản lý 7 nhóm tài nguyên + `thongKeBaoCao` |
 | 13 | Code search/sort/statistics | ⏳ |
 | 14 | UI/menu + đăng nhập | ⏳ |
 | 15 | Kiểm thử (bao gồm đa hình qua `ThucThe*`) & báo cáo | ⏳ |
@@ -632,5 +634,3 @@ void xuatTatCa(ThucThe* ds[], int n) {
 ---
 
 *Tài liệu này là nguồn tri thức chính thức của dự án. Mọi thiết kế (ERD, Class Diagram, code, báo cáo) phải nhất quán với mô hình 8 bảng được mô tả ở trên.*
-# PBL2-QL_CANBO
-# PBL2-QL_CANBO

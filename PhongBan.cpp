@@ -8,8 +8,6 @@ PhongBan::PhongBan(const string& maPhong, const string& tenPhong, const string& 
     : maPhong(maPhong), tenPhong(tenPhong), moTa(moTa) { }
 
 void PhongBan::nhap() {
-    cout << "Nhap ma phong: ";
-    getline(cin, maPhong);
     cout << "Nhap ten phong: ";
     getline(cin, tenPhong);
     cout << "Nhap mo ta: ";
