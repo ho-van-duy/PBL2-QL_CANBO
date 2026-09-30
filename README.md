@@ -487,6 +487,9 @@ QL_CANBO/
 ├── NghiepVu.h          / NghiepVu.cpp      ← hồ sơ/phòng/chức vụ/phân công/lương/đánh giá/khen thưởng + báo cáo + tài khoản
 │
 ├── data/                                 ← 8 file dữ liệu .txt (mục 10)
+├── kiemthu/                              ← bộ kiểm thử tự động (main() riêng)
+│   └── KiemThu.cpp
+├── BAO_CAO.md                           ← báo cáo tổng hợp (kết quả kiểm thử, Big-O, hạn chế)
 └── main.cpp                              ← đăng nhập → menu ADMIN / USER
 ```
 
@@ -512,6 +515,7 @@ QL_CANBO/
 9. Sắp xếp
 10. Thống kê / Báo cáo
 11. Quản lý tài khoản
+12. Xuất tất cả bản ghi theo loại (đa hình `ThucThe*`)   ← mở rộng ngoài đề bài
 0. Đăng xuất / Thoát
 
 ------------ MENU USER -------------
@@ -542,12 +546,24 @@ Cơ chế vòng lặp chính của `main.cpp` (B14):
 - Vòng lặp ngoài: đăng nhập → theo `VaiTro` mở `menuAdmin()` hoặc `menuUser(maCanBo)` → chọn `0` để đăng xuất rồi đăng nhập lại (tối đa 3 lần thử, sai thì kết thúc chương trình).
 - Hàm `chonMenu(ten, min, max)` chỉ đọc 1 số nguyên rồi `cin.ignore(1000, '\n')` để `getline()` của model không bị nuốt dòng; trả `-1` khi hết EOF nên chương trình thoát gọn thay vì quay vô hạn.
 - USER dùng `maCanBo` lấy từ `NghiepVu::dangNhap()` cho 4 mục "của bản thân"; tài khoản chưa liên kết cán bộ sẽ được báo rõ.
+- Mục **12** của ADMIN là mục **mở rộng ngoài yêu cầu đề bài**, thêm vào để chứng minh đa hình `ThucThe*` ngay trong chương trình chạy thật: `NghiepVu::xuatTatCaTheoMau()` gom bản ghi của cả 8 bảng vào **một mảng con trỏ lớp cơ sở** rồi gọi `xuat()` — cùng một kiểu con trỏ, 8 bản `xuat()` khác nhau được định tuyến lúc chạy (xem §8.1 và `BAO_CAO.md`).
 
 ### 8.5 Cách biên dịch
+
+Chương trình chính:
 
 ```bash
 g++ -std=c++11 -Wall -Wextra *.cpp -o QLCB.exe
 ```
+
+Bộ kiểm thử tự động (`kiemthu/KiemThu.cpp` có `main()` riêng nên phải liệt kê tường minh, không dùng `*.cpp`):
+
+```bash
+g++ -std=c++11 -Wall -Wextra CanBo.cpp PhongBan.cpp ChucVu.cpp PhanCong.cpp Luong.cpp DanhGia.cpp ThiDua.cpp Account.cpp Vector.cpp NghiepVu.cpp kiemthu\KiemThu.cpp -o KT.exe
+KT.exe
+```
+
+Lưu ý: `KT.exe` **ghi đè** 8 file trong `data/` rồi đưa chúng về rỗng lúc kết thúc → chỉ chạy khi `data/` không chứa dữ liệu thật; nếu `data/` còn dữ liệu, chương trình dừng ngay với exit code 2. Kết quả: **94/94 PASS**, exit code 0 (xem `BAO_CAO.md`).
 
 ### 8.6 Liên kết giữa các thực thể & phép join runtime
 Quan hệ giữa các thực thể (ERD, mục 4) được thể hiện trong code bằng **khóa (mã ID)**: bảng con giữ cột FK, và **`NghiepVu` thực hiện phép "join" bằng cách quét danh sách, so khóa (FK == PK) khi chạy** — không nhúng con trỏ/reference giữa các model.
@@ -648,8 +664,8 @@ void xuatTatCa(ThucThe* ds[], int n) {
 | 11 | Code lớp nền `ThucThe` + hàm tiện ích (sinh mã, tìm kiếm) | ✅ `ThucThe` xong (8 model kế thừa + override); hàm sinh mã/tìm kiếm nằm trong `NghiepVu` (B12, §8.2) |
 | 12 | Code nghiệp vụ (`NghiepVu` — gộp 1 module) | ✅ Xong: `khoiTao` + `dangNhap` + `sinhMaTuDong` + 10 chức năng + tìm kiếm theo tên + quản lý 7 nhóm tài nguyên + `thongKeBaoCao` |
 | 13 | Code search/sort/statistics | ✅ Gộp trong `NghiepVu` (B12): `timKiemCanBoTheoTen`, `sapXepTheoMa` (QuickSort tăng/giảm), `hienThiDanhSach`, `lietKeDenHanTangLuong`, `demCanBoNu`, `tongThuNhap`, `lietKeCanBoCNTT`, `lietKeCanBoGioi`, `thongKeBaoCao` |
-| 14 | UI/menu + đăng nhập | ✅ `main.cpp`: banner, đăng nhập (tối đa 3 lần), `menuAdmin()` 11 mục + `menuUser()` 6 mục theo §8.4, 7 submenu nhóm, `chonMenu()` an toàn EOF |
-| 15 | Kiểm thử (bao gồm đa hình qua `ThucThe*`) & báo cáo | ⏳ Còn lại: `ThucThe*` (đa hình runtime) chưa có nơi dùng thật + mục báo cáo tổng hợp |
+| 14 | UI/menu + đăng nhập | ✅ `main.cpp`: banner, đăng nhập (tối đa 3 lần), `menuAdmin()` 12 mục + `menuUser()` 6 mục theo §8.4, 7 submenu nhóm, `chonMenu()` an toàn EOF |
+| 15 | Kiểm thử (bao gồm đa hình qua `ThucThe*`) & báo cáo | ✅ `kiemthu/KiemThu.cpp` (94 phép kiểm tra / 13 nhóm, 94/94 PASS) + `NghiepVu::xuatTatCaTheoMau()` nối vào mục 12 menu ADMIN; báo cáo tổng hợp ở `BAO_CAO.md` |
 
 ---
 

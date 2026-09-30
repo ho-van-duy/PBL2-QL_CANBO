@@ -481,6 +481,50 @@ void NghiepVu::timKiemCanBoTheoTen() {
     else cout << "Tim thay " << dem << " can bo.\n";
 }
 
+// ============ Đa hình qua lớp cơ sở ThucThe* ============
+
+void NghiepVu::xuatTatCaTheoMau() {
+    // Gom bản ghi của cả 8 bảng về một mảng con trỏ lớp cơ sở duy nhất.
+    // new[] cấp phát đúng số bản ghi thật nên không có giới hạn cứng,
+    // cũng không tốn 128 KB stack như mảng cố định.
+    int dem[8];
+    dem[0] = CanBo::SoLuong();
+    dem[1] = PhongBan::SoLuong();
+    dem[2] = ChucVu::SoLuong();
+    dem[3] = PhanCong::SoLuong();
+    dem[4] = Luong::SoLuong();
+    dem[5] = DanhGia::SoLuong();
+    dem[6] = ThiDua::SoLuong();
+    dem[7] = Account::SoLuong();
+
+    int tong = 0;
+    for (int t = 0; t < 8; t++) tong += dem[t];
+    if (tong == 0) {
+        cout << "Chua co ban ghi nao de xuat!\n";
+        return;
+    }
+
+    ThucThe** ds = new ThucThe*[tong];
+    int vi = 0;
+    for (int i = 0; i < dem[0]; i++) ds[vi++] = &CanBo::LayTai(i);
+    for (int i = 0; i < dem[1]; i++) ds[vi++] = &PhongBan::LayTai(i);
+    for (int i = 0; i < dem[2]; i++) ds[vi++] = &ChucVu::LayTai(i);
+    for (int i = 0; i < dem[3]; i++) ds[vi++] = &PhanCong::LayTai(i);
+    for (int i = 0; i < dem[4]; i++) ds[vi++] = &Luong::LayTai(i);
+    for (int i = 0; i < dem[5]; i++) ds[vi++] = &DanhGia::LayTai(i);
+    for (int i = 0; i < dem[6]; i++) ds[vi++] = &ThiDua::LayTai(i);
+    for (int i = 0; i < dem[7]; i++) ds[vi++] = &Account::LayTai(i);
+
+    cout << "\n=== XUAT TAT CA DUOC QUA CON TRO ThucThe* (" << tong << " ban ghi) ===\n";
+    for (int i = 0; i < tong; i++) {
+        // Gọi hàm ảo trên con trỏ lớp cơ sở: runtime polymorphism. Bên trong
+        // xuat() của lớp con lại gọi ThucThe::xuat() -> loaiThucThe() ảo,
+        // nên nhãn "----- CAN_BO -----" cũng được định tuyến lúc chạy.
+        ds[i]->xuat();
+    }
+    delete[] ds;
+}
+
 // ============ Quản lý tài nguyên ============
 
 void NghiepVu::themPhongBan() {

@@ -160,8 +160,9 @@ void menuAdmin() {
              << "9. Sap xep\n"
              << "10. Thong ke / Bao cao\n"
              << "11. Quan ly tai khoan\n"
+             << "12. Xuat tat ca ban ghi theo loai (da hinh ThucThe*)\n"
              << "0. Dang xuat / Thoat\n";
-        int chon = chonMenu("Chon", 0, 11);
+        int chon = chonMenu("Chon", 0, 12);
         if (chon == -1 || chon == 0) return;
         if (chon == 1) menuQuanLyCanBo();
         else if (chon == 2) menuQuanLyPhongBan();
@@ -173,7 +174,8 @@ void menuAdmin() {
         else if (chon == 8) NghiepVu::timKiemCanBoTheoTen();
         else if (chon == 9) menuSapXep();
         else if (chon == 10) NghiepVu::thongKeBaoCao();
-        else menuQuanLyTaiKhoan();
+        else if (chon == 11) menuQuanLyTaiKhoan();
+        else NghiepVu::xuatTatCaTheoMau();
     }
 }
 

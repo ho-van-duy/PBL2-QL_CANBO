@@ -35,6 +35,9 @@ public:
     // Tìm kiếm theo tên
     static void timKiemCanBoTheoTen();
 
+    // Đa hình: xuất mọi bản ghi của cả 8 bảng qua con trỏ lớp cơ sở ThucThe*
+    static void xuatTatCaTheoMau();
+
     // Quản lý cho menu ADMIN
     static void themPhongBan();
     static void xemPhongBan();
