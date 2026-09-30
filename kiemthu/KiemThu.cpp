@@ -7,9 +7,15 @@
 //      g++ -std=c++11 -Wall -Wextra CanBo.cpp PhongBan.cpp ChucVu.cpp PhanCong.cpp Luong.cpp DanhGia.cpp ThiDua.cpp Account.cpp Vector.cpp NghiepVu.cpp kiemthu\KiemThu.cpp -o KT.exe
 //      KT.exe            (chay tu thu muc goc du an, can data/ rong)
 //
-//  Exit code: 0 = tat ca PASS, 1 = co FAIL, 2 = data/ khong rong.
-//  Luu y: harness GHI DEM LAI 8 file trong data/ roi dua ve rong luc
-//  ket thuc, nen khong chay khi du an dang co du lieu that.
+//  Exit code: 0 = tat ca PASS, 1 = co FAIL, 2 = data/ co du lieu that.
+//
+//  Dieu kien chay: 7 file trong data/ phai rong. data/account.txt duoc phep
+//  rong HOAC chi chua 2 tai khoan demo mac dinh (TK001 admin, TK002 user) —
+//  dang thu tu xuat hien khi chay chuong trinh chinh 1 lan. Neu co du lieu
+//  khac (can bo, phan cong, ...) harness dung ngay, khong ghi de.
+//
+//  Khi ket thuc, harness dua data/ ve lai trang thai "7 file rong + 2 tai
+//  khoan demo" de chay QLCB.exe ngay sau do van dang nhap duoc.
 // ================================================================
 #include "../NghiepVu.h"
 #include "../Vector.h"
@@ -25,6 +31,7 @@
 #include <sstream>
 #include <fstream>
 #include <stdexcept>
+#include <vector>
 
 // ---------- Bo dem ket qua ----------
 
@@ -122,22 +129,70 @@ static const char* FILE_DATA[8] = {
     "data/luong.txt", "data/danhgia.txt", "data/thidua.txt", "data/account.txt"
 };
 
-static bool dataRong() {
-    for (int i = 0; i < 8; i++) {
-        ifstream in(FILE_DATA[i]);
-        string t;
-        bool coDuLieu = (bool)(in >> t);
-        in.close();
-        if (coDuLieu) return false;
-    }
-    return true;
+// 2 tai khoan demo do NghiepVu::khoiTao() tao tu dong — duoc phep ton tai san
+const string TAI_KHOAN_DEMO[2] = {
+    "TK001|admin|admin|ADMIN|1|",
+    "TK002|user|user|USER|1|"
+};
+
+static const int FILE_TAI_KHOAN = 7;
+
+static string soSangChuoi(int n) {
+    ostringstream oss;
+    oss << n;
+    return oss.str();
 }
 
-static void lamRongData() {
+// Doc het 1 file thanh vector dong (bo dong rong o cuoi)
+static vector<string> docDongHet(const char* duongDan) {
+    ifstream in(duongDan);
+    vector<string> ket;
+    string dong;
+    while (getline(in, dong)) {
+        if (!dong.empty() && dong[dong.size() - 1] == '\r') dong.erase(dong.size() - 1);
+        if (!dong.empty()) ket.push_back(dong);
+    }
+    in.close();
+    return ket;
+}
+
+static bool laTaiKhoanDemo(const string& dong) {
+    for (int i = 0; i < 2; i++) if (dong == TAI_KHOAN_DEMO[i]) return true;
+    return false;
+}
+
+// Kiem tra data/ co san de chay kiem thu khong. Tra ve "" neu OK,
+// neu khong thi tra ve danh sach mo ta van de de in ra man hinh.
+static string vanDeData() {
     for (int i = 0; i < 8; i++) {
+        if (i == FILE_TAI_KHOAN) continue;   // xu ly rieng o duoi
+        vector<string> dong = docDongHet(FILE_DATA[i]);
+        if (!dong.empty()) {
+            return string(FILE_DATA[i]) + " dang co " + soSangChuoi(dong.size())
+                 + " dong du lieu that (chi duoc rong hoac chi chua 2 tai khoan demo)";
+        }
+    }
+    vector<string> acc = docDongHet(FILE_DATA[FILE_TAI_KHOAN]);
+    if (acc.empty()) return "";              // rong: se do khoiTao() tao moi
+    for (size_t i = 0; i < acc.size(); i++) {
+        if (!laTaiKhoanDemo(acc[i])) {
+            return string(FILE_DATA[FILE_TAI_KHOAN]) + " co dong khong phai 2 tai khoan demo:\n       | "
+                 + acc[i];
+        }
+    }
+    return "";
+}
+
+// Dua data/ ve trang thai san de chay chuong trinh chinh: 7 file rong + 2 tk demo
+static void veTrangThaiSan() {
+    for (int i = 0; i < 8; i++) {
+        if (i == FILE_TAI_KHOAN) continue;
         ofstream out(FILE_DATA[i], ios::trunc);
         out.close();
     }
+    ofstream out(FILE_DATA[FILE_TAI_KHOAN], ios::trunc);
+    for (int i = 0; i < 2; i++) out << TAI_KHOAN_DEMO[i] << "\n";
+    out.close();
 }
 
 static int demDong(const char* duongDan) {
@@ -167,12 +222,16 @@ int main() {
          << "   KIEM THU TU DONG - HE THONG QUAN LY CAN BO\n"
          << "============================================" << endl;
 
-    if (!dataRong()) {
-        cout << "\n[STOP] Thu muc data/ dang co du lieu that.\n"
-             << "       Hay dua data/ ve trang thai rong truoc khi chay kiem thu\n"
-             << "       (vi du: xoa het noi dung trong 8 file .txt)." << endl;
+    string vanDe = vanDeData();
+    if (vanDe != "") {
+        cout << "\n[STOP] Thu muc data/ dang co du lieu that:" << endl;
+        cout << "       " << vanDe << endl;
+        cout << "       Hay dua data/ ve trang thai rong (hoac chi con 2 tai khoan"
+             << " demo) truoc khi chay kiem thu." << endl;
+        cout << "       Harness KHONG ghi de du lieu nay." << endl;
         return 2;
     }
+    cout << "Du dieu kien data/ (7 file rong, chi con 2 tai khoan demo)." << endl;
 
     // ============ 1. Khoi tao & sinh ma tu dong ============
     tieuDe("1. Khoi tao & sinh ma tu dong");
@@ -499,8 +558,9 @@ int main() {
     if (soLoi == 0) cout << "  KET QUA: PASS TAT CA" << endl;
     else cout << "  KET QUA: CO FAIL" << endl;
     cout << "============================================" << endl;
+    cout << "  Da khoi phuc data/: 7 file rong + 2 tai khoan demo." << endl;
 
-    lamRongData();
+    veTrangThaiSan();
     if (banLenh != NULL) {
         delete banLenh;
         banLenh = NULL;

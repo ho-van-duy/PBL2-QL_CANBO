@@ -563,7 +563,12 @@ g++ -std=c++11 -Wall -Wextra CanBo.cpp PhongBan.cpp ChucVu.cpp PhanCong.cpp Luon
 KT.exe
 ```
 
-Lưu ý: `KT.exe` **ghi đè** 8 file trong `data/` rồi đưa chúng về rỗng lúc kết thúc → chỉ chạy khi `data/` không chứa dữ liệu thật; nếu `data/` còn dữ liệu, chương trình dừng ngay với exit code 2. Kết quả: **94/94 PASS**, exit code 0 (xem `BAO_CAO.md`).
+Lưu ý: `KT.exe` **ghi đè** 8 file trong `data/` rồi đưa chúng về trạng thái "7 file rỗng + `account.txt` chứa đúng 2 tài khoản demo" khi kết thúc → chạy `QLCB.exe` ngay sau đó vẫn đăng nhập được. Điều kiện được phép chạy:
+
+- 7 file `data/*.txt` (trừ `account.txt`) phải **rỗng**;
+- `data/account.txt` được phép **rỗng hoặc chỉ chứa đúng 2 tài khoản demo** `TK001|admin|admin|ADMIN|1|` và `TK002|user|user|USER|1|` (chính là trạng thái sinh ra sau khi chạy chương trình chính một lần).
+
+Nếu có dữ liệu thật (cán bộ, phân công, …) harness **dừng ngay, không ghi đè**, in ra file cần xử lý và trả exit code **2**. Kết quả khi chạy hợp lệ: **94/94 PASS**, exit code 0 (xem `BAO_CAO.md`).
 
 ### 8.6 Liên kết giữa các thực thể & phép join runtime
 Quan hệ giữa các thực thể (ERD, mục 4) được thể hiện trong code bằng **khóa (mã ID)**: bảng con giữ cột FK, và **`NghiepVu` thực hiện phép "join" bằng cách quét danh sách, so khóa (FK == PK) khi chạy** — không nhúng con trỏ/reference giữa các model.

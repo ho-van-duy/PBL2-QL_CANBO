@@ -1,116 +1,116 @@
-﻿# BÃO CÃO Tá»”NG Há»¢P â€” Há»† THá»NG QUáº¢N LÃ CÃN Bá»˜ (PBL2)
+# BÁO CÁO TỔNG HỢP — HỆ THỐNG QUẢN LÝ CÁN BỘ (PBL2)
 
 | | |
 |---|---|
-| **Äá»“ Ã¡n** | Láº­p trÃ¬nh hÆ°á»›ng Ä‘á»‘i tÆ°á»£ng (PBL2) â€” Quáº£n lÃ½ cÃ¡n bá»™ |
-| **NgÃ´n ngá»¯** | C++11 (`g++ -std=c++11 -Wall -Wextra`, build sáº¡ch 0 cáº£nh bÃ¡o) |
-| **Kiá»ƒm thá»­** | `kiemthu/KiemThu.cpp` â€” **94/94 PASS**, exit code 0 |
-| **TÃ i liá»‡u chi tiáº¿t** | `README.md` (ERD, class diagram, quy táº¯c nghiá»‡p vá»¥, Big-O, Ä‘á»‘i chiáº¿u Ä‘á» bÃ i) |
+| **Đồ án** | Lập trình hướng đối tượng (PBL2) — Quản lý cán bộ |
+| **Ngôn ngữ** | C++11 (`g++ -std=c++11 -Wall -Wextra`, build sạch 0 cảnh báo) |
+| **Kiểm thử** | `kiemthu/KiemThu.cpp` — **94/94 PASS**, exit code 0 |
+| **Tài liệu chi tiết** | `README.md` (ERD, class diagram, quy tắc nghiệp vụ, Big-O, đối chiếu đề bài) |
 
 ---
 
-## 1. Pháº¡m vi Ä‘Ã£ hoÃ n thÃ nh
+## 1. Phạm vi đã hoàn thành
 
-| Má»¥c | Ná»™i dung |
+| Mục | Nội dung |
 |---|---|
-| B11 | Lá»›p ná»n `ThucThe` + 8 model káº¿ thá»«a |
-| B12 | Module nghiá»‡p vá»¥ `NghiepVu` (gá»™p 1 module): `khoiTao`, `dangNhap`, `sinhMaTuDong`, 10 chá»©c nÄƒng, tÃ¬m kiáº¿m, quáº£n lÃ½ 7 nhÃ³m tÃ i nguyÃªn, `thongKeBaoCao` |
-| B13 | Search / sort / statistics (QuickSort, tÃ¬m kiáº¿m theo tÃªn, 6 hÃ m thá»‘ng kÃª) â€” gá»™p trong `NghiepVu` |
-| B14 | `main.cpp`: Ä‘Äƒng nháº­p + menu ADMIN/USER + 7 submenu nhÃ³m, `chonMenu()` an toÃ n EOF |
-| B15 | **Bá»™ kiá»ƒm thá»­ tá»± Ä‘á»™ng 94 phÃ©p kiá»ƒm tra** + **`NghiepVu::xuatTatCaTheoMau()`** (Ä‘a hÃ¬nh `ThucThe*`) ná»‘i vÃ o má»¥c 12 menu ADMIN + bÃ¡o cÃ¡o nÃ y |
+| B11 | Lớp nền `ThucThe` + 8 model kế thừa |
+| B12 | Module nghiệp vụ `NghiepVu` (gộp 1 module): `khoiTao`, `dangNhap`, `sinhMaTuDong`, 10 chức năng, tìm kiếm, quản lý 7 nhóm tài nguyên, `thongKeBaoCao` |
+| B13 | Search / sort / statistics (QuickSort, tìm kiếm theo tên, 6 hàm thống kê) — gộp trong `NghiepVu` |
+| B14 | `main.cpp`: đăng nhập + menu ADMIN/USER + 7 submenu nhóm, `chonMenu()` an toàn EOF |
+| B15 | **Bộ kiểm thử tự động 94 phép kiểm tra** + **`NghiepVu::xuatTatCaTheoMau()`** (đa hình `ThucThe*`) nối vào mục 12 menu ADMIN + báo cáo này |
 
-ToÃ n bá»™ 15 má»¥c roadmap trong `README.md` Ä‘Ã£ Ä‘Ã¡nh dáº¥u âœ….
+Toàn bộ 15 mục roadmap trong `README.md` đã đánh dấu ✅.
 
 ---
 
-## 2. Kiáº¿n trÃºc OOP
+## 2. Kiến trúc OOP
 
-### 2.1 Lá»›p ná»n `ThucThe` â€” Ä‘iá»ƒm nháº¥n Ä‘a hÃ¬nh
+### 2.1 Lớp nền `ThucThe` — điểm nhấn đa hình
 
 ```cpp
 class ThucThe {
 public:
-    virtual void nhap() = 0;                      // thuáº§n áº£o
-    virtual void xuat() const {                   // CÃ“ THÃ‚N Máº¶C Äá»ŠNH
+    virtual void nhap() = 0;                      // thuần ảo
+    virtual void xuat() const {                   // CÓ THÂN MẶC ĐỊNH
         cout << "----- " << loaiThucThe() << " -----" << endl;
     }
-    virtual void ghiDong(ofstream& out) const = 0; // thuáº§n áº£o
-    virtual void docDong(ifstream& in) = 0;        // thuáº§n áº£o
-    virtual string loaiThucThe() const = 0;         // thuáº§n áº£o
+    virtual void ghiDong(ofstream& out) const = 0; // thuần ảo
+    virtual void docDong(ifstream& in) = 0;        // thuần ảo
+    virtual string loaiThucThe() const = 0;        // thuần ảo
     virtual ~ThucThe() {}
 };
 ```
 
-ÄÃ¢y lÃ  ká»¹ thuáº­t **Template Method** á»Ÿ dáº¡ng tá»‘i giáº£n: `ThucThe` Ä‘á»‹nh nghÄ©a *khuÃ´n máº«u* in nhÃ£n loáº¡i, lá»›p con chá»‰ pháº£i hiá»‡n thá»±c `loaiThucThe()`. Nhá» váº­y 8 lá»›p con khÃ´ng pháº£i láº·p láº¡i dÃ²ng `----- CAN_BO -----`.
+Đây là kỹ thuật **Template Method** ở dạng tối giản: `ThucThe` định nghĩa *khuôn mẫu* in nhãn loại, lớp con chỉ phải hiện thực `loaiThucThe()`. Nhờ vậy 8 lớp con không phải lặp lại dòng `----- CAN_BO -----`.
 
-### 2.2 Bá»‘n tÃ­nh cháº¥t OOP
+### 2.2 Bốn tính chất OOP
 
-| TÃ­nh cháº¥t | Thá»ƒ hiá»‡n |
+| Tính chất | Thể hiện |
 |---|---|
-| **Encapsulation** | Thuá»™c tÃ­nh `private`, truy cáº­p qua getter/setter. `NghiepVu` khÃ´ng Ä‘á»¥ng field, chá»‰ gá»i `GetMaCB()`, `HieuLuc()`, `Them()`, `LayTai()`â€¦ Tráº¡ng thÃ¡i "Ä‘ang hiá»‡u lá»±c" Ä‘Æ°á»£c giáº¥u sau `HieuLuc()` |
-| **Abstraction** | `ThucThe` Ä‘á»‹nh nghÄ©a bá»™ hÃ nh vi chung (3 hÃ m thuáº§n áº£o + `xuat()` cÃ³ thÃ¢n máº·c Ä‘á»‹nh); `NghiepVu` phÆ¡i ra API nghiá»‡p vá»¥ Ä‘á»ƒ `main.cpp` khÃ´ng biáº¿t chi tiáº¿t lÆ°u trá»¯ |
-| **Inheritance** | 8 model `: public ThucThe` vÃ  `override` hÃ nh vi; má»—i `xuat()` cá»§a lá»›p con **gá»i láº¡i `ThucThe::xuat()`** á»Ÿ Ä‘áº§u thÃ¢n hÃ m Ä‘á»ƒ tÃ¡i sá»­ dá»¥ng mÃ£ cá»§a cha |
-| **Polymorphism** | Gá»i `xuat()` qua `ThucThe*` Ä‘á»‹nh tuyáº¿n Ä‘Ãºng báº£n cá»§a tá»«ng loáº¡i lÃºc **cháº¡y** (Â§4). Äa hÃ¬nh cÃ²n xáº£y ra *bÃªn trong* `ThucThe::xuat()` khi gá»i `loaiThucThe()` áº£o |
+| **Encapsulation** | Thuộc tính `private`, truy cập qua getter/setter. `NghiepVu` không đụng field, chỉ gọi `GetMaCB()`, `HieuLuc()`, `Them()`, `LayTai()`… Trạng thái "đang hiệu lực" được giấu sau `HieuLuc()` |
+| **Abstraction** | `ThucThe` định nghĩa bộ hành vi chung (3 hàm thuần ảo + `xuat()` có thân mặc định); `NghiepVu` phơi ra API nghiệp vụ để `main.cpp` không biết chi tiết lưu trữ |
+| **Inheritance** | 8 model `: public ThucThe` và `override` hành vi; mỗi `xuat()` của lớp con **gọi lại `ThucThe::xuat()`** ở đầu thân hàm để tái sử dụng mã của cha |
+| **Polymorphism** | Gọi `xuat()` qua `ThucThe*` định tuyến đúng bản của từng loại lúc **chạy** (§4). Đa hình còn xảy ra *bên trong* `ThucThe::xuat()` khi gọi `loaiThucThe()` ảo |
 
-NgoÃ i ra cÃ²n cÃ³ **náº¡p chá»“ng toÃ¡n tá»­** (`PhanCong::operator==`, `Vector::operator[]`).
+Ngoài ra còn có **nạp chồng toán tử** (`PhanCong::operator==`, `Vector::operator[]`).
 
-### 2.3 PhÃ¢n biá»‡t vá»›i ERD
+### 2.3 Phân biệt với ERD
 
-- **DATABASE ENTITY** (má»¥c 4 Ä‘á» bÃ i) = 8 báº£ng: `CAN_BO`, `PHONG_BAN`, `CHUC_VU`, `PHAN_CONG`, `LICH_SU_LUONG`, `DANH_GIA`, `KHEN_THUONG_KY_LUAT`, `TAI_KHOAN`.
-- **C++ CLASS** = 8 model (káº¿ thá»«a `ThucThe`) + `Vector` (cáº¥u trÃºc dá»¯ liá»‡u tá»± viáº¿t) + táº§ng nghiá»‡p vá»¥ `NghiepVu`.
-- Quan há»‡ 1â€“N **khÃ´ng nhÃºng con trá»** giá»¯a cÃ¡c model, mÃ  dÃ¹ng **khÃ³a (mÃ£ ID)**; `NghiepVu` thá»±c hiá»‡n phÃ©p "join" lÃºc cháº¡y báº±ng cÃ¡ch quÃ©t danh sÃ¡ch vÃ  so khÃ³a (FK == PK). Chi tiáº¿t tá»« quan há»‡ nÃ o náº±m á»Ÿ Ä‘Ã¢u xem `README.md` Â§8.6.
+- **DATABASE ENTITY** (mục 4 đề bài) = 8 bảng: `CAN_BO`, `PHONG_BAN`, `CHUC_VU`, `PHAN_CONG`, `LICH_SU_LUONG`, `DANH_GIA`, `KHEN_THUONG_KY_LUAT`, `TAI_KHOAN`.
+- **C++ CLASS** = 8 model (kế thừa `ThucThe`) + `Vector` (cấu trúc dữ liệu tự viết) + tầng nghiệp vụ `NghiepVu`.
+- Quan hệ 1–N **không nhúng con trỏ** giữa các model, mà dùng **khóa (mã ID)**; `NghiepVu` thực hiện phép "join" lúc chạy bằng cách quét danh sách và so khóa (FK == PK). Chi tiết từ quan hệ nào nằm ở đâu xem `README.md` §8.6.
 
 ---
 
-## 3. Quy táº¯c nghiá»‡p vá»¥ Ä‘Ã£ chá»‘t
+## 3. Quy tắc nghiệp vụ đã chốt
 
-| MÃ£ | Quy táº¯c |
+| Mã | Quy tắc |
 |---|---|
-| C1 | `NGAYVAOLAM` â‰¤ `NGAYSINH` â†’ tá»« chá»‘i khi thÃªm cÃ¡n bá»™ |
-| C2 | Má»™t cÃ¡n bá»™ **khÃ´ng Ä‘Æ°á»£c phá»¥c vá»¥ 2 phÃ²ng chÃ­nh cÃ¹ng lÃºc**; phÃ²ng kiÃªm nhiá»‡m khÃ´ng bá»‹ cháº·n |
-| C3 | TrÃ¹ng `ThoiGian` giá»¯a cÃ¡c báº£n ghi `LICH_SU_LUONG` cá»§a cÃ¹ng má»™t cÃ¡n bá»™ â†’ tá»« chá»‘i |
-| C4 | XÃ³a cÃ¡n bá»™ = **xÃ³a má»m** (`TrangThai = "NghiViec"`), giá»¯ nguyÃªn mÃ£ Ä‘á»ƒ khÃ´ng phÃ¡ khoÃ¡ ngoáº¡i/tham chiáº¿u lá»‹ch sá»­ |
-| C5 | XÃ³a `PHONG_BAN`/`CHUC_VU` Ä‘ang Ä‘Æ°á»£c phÃ¢n cÃ´ng â†’ tá»« chá»‘i; xÃ³a má»m chá»‰ Ã¡p dá»¥ng cho cÃ¡n bá»™ |
-| C6 | ThÃªm tÃ i khoáº£n: tÃªn Ä‘Äƒng nháº­p pháº£i duy nháº¥t, máº­t kháº©u â‰¥ 4 kÃ½ tá»±; tÃ i khoáº£n bá»‹ khoÃ¡ khÃ´ng Ä‘Äƒng nháº­p Ä‘Æ°á»£c |
+| C1 | `NGAYVAOLAM` ≤ `NGAYSINH` → từ chối khi thêm cán bộ |
+| C2 | Một cán bộ **không được phục vụ 2 phòng chính cùng lúc**; phòng kiêm nhiệm không bị chặn |
+| C3 | Trùng `ThoiGian` giữa các bản ghi `LICH_SU_LUONG` của cùng một cán bộ → từ chối |
+| C4 | Xóa cán bộ = **xóa mềm** (`TrangThai = "NghiViec"`), giữ nguyên mã để không phá khoá ngoại/tham chiếu lịch sử |
+| C5 | Xóa `PHONG_BAN`/`CHUC_VU` đang được phân công → từ chối; xóa mềm chỉ áp dụng cho cán bộ |
+| C6 | Thêm tài khoản: tên đăng nhập phải duy nhất, mật khẩu ≥ 4 ký tự; tài khoản bị khoá không đăng nhập được |
 
-CÃ¡c quy táº¯c khÃ¡c: mÃ£ khÃ³a **tá»± sinh** (`sinhMaTuDong`) ngÆ°á»i dÃ¹ng khÃ´ng nháº­p tay; chu ká»³ tÄƒng lÆ°Æ¡ng **3 nÄƒm**; `tongThuNhap()` chá»‰ cá»™ng cÃ¡c báº£n ghi lÆ°Æ¡ng **Ä‘ang hiá»‡u lá»±c**.
+Các quy tắc khác: mã khóa **tự sinh** (`sinhMaTuDong`) người dùng không nhập tay; chu kỳ tăng lương **3 năm**; `tongThuNhap()` chỉ cộng các bản ghi lương **đang hiệu lực**.
 
 ---
 
-## 4. Äa hÃ¬nh runtime qua `ThucThe*`
+## 4. Đa hình runtime qua `ThucThe*`
 
-### 4.1 HÃ m dÃ¹ng tháº­t trong chÆ°Æ¡ng trÃ¬nh
+### 4.1 Hàm dùng thật trong chương trình
 
-`NghiepVu::xuatTatCaTheoMau()` (má»¥c 12 cá»§a menu ADMIN):
+`NghiepVu::xuatTatCaTheoMau()` (mục 12 của menu ADMIN):
 
 ```cpp
 int dem[8] = { CanBo::SoLuong(), PhongBan::SoLuong(), ChucVu::SoLuong(), PhanCong::SoLuong(),
                Luong::SoLuong(), DanhGia::SoLuong(), ThiDua::SoLuong(), Account::SoLuong() };
-int tong = /* tá»•ng dem */;
-ThucThe** ds = new ThucThe*[tong];          // máº£ng pháº³ng, cáº¥p phÃ¡t Ä‘Ãºng sá»‘ báº£n ghi tháº­t
-// â€¦ Ä‘iá»n ds báº±ng &CanBo::LayTai(i), &PhongBan::LayTai(i), â€¦
-for (int i = 0; i < tong; i++) ds[i]->xuat(); // cÃ¹ng kiá»ƒu con trá», 8 báº£n khÃ¡c nhau
+int tong = /* tổng dem */;
+ThucThe** ds = new ThucThe*[tong];          // mảng phẳng, cấp phát đúng số bản ghi thật
+// … điền ds bằng &CanBo::LayTai(i), &PhongBan::LayTai(i), …
+for (int i = 0; i < tong; i++) ds[i]->xuat(); // cùng kiểu con trỏ, 8 bản khác nhau
 delete[] ds;
 ```
 
-Má»™t vÃ²ng `for` duy nháº¥t gá»i `xuat()` trÃªn **cÃ¹ng má»™t kiá»ƒu con trá» `ThucThe*`**, nhÆ°ng má»—i báº£n ghi in ra nhÃ£n khÃ¡c nhau â€” Ä‘Ã³ lÃ  báº±ng chá»©ng Ä‘a hÃ¬nh lÃºc cháº¡y. BÃªn trong má»—i `xuat()` cá»§a lá»›p con, lá»i gá»i `ThucThe::xuat()` láº¡i Ä‘á»‹nh tuyáº¿n `loaiThucThe()` áº£o vá» Ä‘Ãºng báº£n cá»§a lá»›p con.
+Một vòng `for` duy nhất gọi `xuat()` trên **cùng một kiểu con trỏ `ThucThe*`**, nhưng mỗi bản ghi in ra nhãn khác nhau — đó là bằng chứng đa hình lúc chạy. Bên trong mỗi `xuat()` của lớp con, lời gọi `ThucThe::xuat()` lại định tuyến `loaiThucThe()` ảo về đúng bản của lớp con.
 
-Máº£ng Ä‘Æ°á»£c cáº¥p phÃ¡t Ä‘á»™ng báº±ng `new[]` **theo Ä‘Ãºng sá»‘ báº£n ghi** thay vÃ¬ má»™t máº£ng cá»‘ Ä‘á»‹nh, nÃªn khÃ´ng cÃ³ giá»›i háº¡n cáº¯t dá»¯ liá»‡u vÃ  khÃ´ng tá»‘n 128 KB stack.
+Mảng được cấp phát động bằng `new[]` **theo đúng số bản ghi** thay vì một mảng cố định, nên không có giới hạn cắt dữ liệu và không tốn 128 KB stack.
 
-### 4.2 Káº¿t quáº£ kiá»ƒm chá»©ng
+### 4.2 Kết quả kiểm chứng
 
-NhÃ³m 12 cá»§a bá»™ kiá»ƒm thá»­ xÃ¡c nháº­n:
+Nhóm 12 của bộ kiểm thử xác nhận:
 
-- táº¡o Ä‘Æ°á»£c **8 con trá» `ThucThe*`** trá» tá»›i 8 loáº¡i báº£n ghi khÃ¡c nhau;
-- `ds[i]->loaiThucThe()` tráº£ vá» Ä‘Ãºng 8 nhÃ£n: `CAN_BO`, `PHONG_BAN`, `CHUC_VU`, `PHAN_CONG`, `LICH_SU_LUONG`, `DANH_GIA`, `KHEN_THUONG_KY_LUAT`, `TAI_KHOAN`;
-- `ds[i]->xuat()` gá»i Ä‘Ãºng báº£n `override` cá»§a tá»«ng loáº¡i (kiá»ƒm tra dÃ²ng nhÃ£n `----- <LOAI> -----`);
-- `xuatTatCaTheoMau()` in Ä‘á»§ 8 loáº¡i vá»›i sá»‘ báº£n ghi khá»›p tá»«ng báº£ng (18 báº£n ghi trong ká»‹ch báº£n kiá»ƒm thá»­).
+- tạo được **8 con trỏ `ThucThe*`** trỏ tới 8 loại bản ghi khác nhau;
+- `ds[i]->loaiThucThe()` trả về đúng 8 nhãn: `CAN_BO`, `PHONG_BAN`, `CHUC_VU`, `PHAN_CONG`, `LICH_SU_LUONG`, `DANH_GIA`, `KHEN_THUONG_KY_LUAT`, `TAI_KHOAN`;
+- `ds[i]->xuat()` gọi đúng bản `override` của từng loại (kiểm tra dòng nhãn `----- <LOAI> -----`);
+- `xuatTatCaTheoMau()` in đủ 8 loại với số bản ghi khớp từng bảng (18 bản ghi trong kịch bản kiểm thử).
 
-ÄÃ£ kiá»ƒm tra thá»§ cÃ´ng qua menu 12 cá»§a chÆ°Æ¡ng trÃ¬nh tháº­t: in ra `----- CAN_BO -----`, `----- TAI_KHOAN -----`, â€¦ Ä‘Ãºng nhÆ° mong Ä‘á»£i.
+Đã kiểm tra thủ công qua menu 12 của chương trình thật: in ra `----- CAN_BO -----`, `----- TAI_KHOAN -----`, … đúng như mong đợi.
 
 ---
 
-## 5. Káº¿t quáº£ kiá»ƒm thá»­ tá»± Ä‘á»™ng
+## 5. Kết quả kiểm thử tự động
 
 ```
 ============================================
@@ -123,100 +123,103 @@ NhÃ³m 12 cá»§a bá»™ kiá»ƒm thá»­ xÃ¡c nháº­n:
 ============================================
 ```
 
-| # | NhÃ³m kiá»ƒm tra | PhÃ©p | Ná»™i dung chÃ­nh |
+| # | Nhóm kiểm tra | Phép | Nội dung chính |
 |---|---|---|---|
-| 1 | Khá»Ÿi táº¡o & sinh mÃ£ | 9 | 2 tÃ i khoáº£n demo; `sinhMaTuDong` cho 8 loáº¡i â†’ `CB001`, `P01`, `CV01`, `PC001`, `ML001`, `DG001`, `SK001`, `TK003`; loáº¡i láº¡ â†’ chuá»—i rá»—ng |
-| 2 | `Vector` | 6 | Nháº­p tá»« `cin`, `out_of_range`, copy constructor, gÃ¡n tÃ¡ch biáº¿n |
-| 3 | PhÃ²ng ban & chá»©c vá»¥ | 6 | Sinh mÃ£ `P01`â†’`P03`, `CV01`; lÆ°u tÃªn/phá»¥ cáº¥p |
-| 4 | CÃ¡n bá»™ | 10 | ThÃªm nhiá»u/thÃªm má»™t, mÃ£ `CB001`â†’`CB004`, máº·c Ä‘á»‹nh `DangLamViec`, `TinhTuoi()`/`TinhNamLam()` |
-| 5 | TÃ¬m kiáº¿m & sáº¯p xáº¿p | 6 | TÃ¬m theo tÃªn khÃ´ng phÃ¢n biá»‡t hoa/thÆ°á»ng (2 káº¿t quáº£), "khÃ´ng tÃ¬m tháº¥y", QuickSort tÄƒng/giáº£n/khÆ°Æ¡ng hÃ³a |
-| 6 | PhÃ¢n cÃ´ng â€” FK + C2 | 10 | PhÃ²ng chÃ­nh; **C2** cháº·n 2 phÃ²ng chÃ­nh, cho phÃ©p kiÃªm nhiá»‡m; FK sai `MaCanBo`/`MaPhong`/`MaChucVu` Ä‘á»u bá»‹ tá»« chá»‘i |
-| 7 | LÆ°Æ¡ng â€” cÃ´ng thá»©c + C3 | 6 | `tinhThucLinh()` = `(3.0+2.0)*1490000 + 1 = 7450001`; `HieuLuc()` theo `DenNgay`; **C3** cháº·n trÃ¹ng thá»i gian |
-| 8 | ÄÃ¡nh giÃ¡ & khen thÆ°á»Ÿng | 4 | Láº¥y Ä‘Ã¡nh giÃ¡ **má»›i nháº¥t** (DG002 2026 thay DG001 "Giá»i"); thÃªm sá»± kiá»‡n `SK001` |
-| 9 | TÃ i khoáº£n & Ä‘Äƒng nháº­p | 9 | Táº¡o `TK003` liÃªn káº¿t `CB001`; trÃ¹ng tÃªn Ä‘Äƒng nháº­p bá»‹ tá»« chá»‘i; Ä‘Ãºng/sai máº­t kháº©u; khoÃ¡ â†’ khÃ´ng Ä‘Äƒng nháº­p Ä‘Æ°á»£c; má»Ÿ khoÃ¡ láº¡i |
-| 10 | XÃ³a má»m & sá»­a | 10 | XÃ³a má»n `CB004` (cÃ²n 4 báº£n ghi, `NghiViec`); thá»‘ng kÃª váº«n tÃ­nh cáº£ báº£n ghi Ä‘Ã£ xÃ³a má»m; sá»­a thÃ´ng tin giá»¯ nguyÃªn mÃ£; FK cháº·n xÃ³a phÃ²ng/chá»©c vá»¥ Ä‘ang dÃ¹ng |
-| 11 | Thá»‘ng kÃª & bÃ¡o cÃ¡o | 9 | `demCanBoNu` 2/4; `lietKeCanBoCNTT` 2; `lietKeDenHanTangLuong` 4/4; `tongThuNhap` = 5215000 (chá»‰ báº£n lÆ°Æ¡ng hiá»‡u lá»±c); `thongKeBaoCao` Ä‘á»§ 4 chá»‰ sá»‘ |
-| 12 | **Äa hÃ¬nh `ThucThe*`** | 20 | 8 con trá»; 8 nhÃ£n `loaiThucThe()`; 8 báº£n `xuat()`; `xuatTatCaTheoMau` Ä‘á»§ 8 loáº¡i & Ä‘Ãºng sá»‘ báº£n ghi |
-| 13 | LÆ°u trá»¯ & round-trip | 12 | Äáº¿m dÃ²ng 5 file; `DocTatCa()` Ä‘á»c láº¡i Ä‘Ãºng sá»‘ lÆ°á»£ng/ná»™i dung/sau khi sá»­a & xÃ³a má»m |
+| 1 | Khởi tạo & sinh mã | 9 | 2 tài khoản demo; `sinhMaTuDong` cho 8 loại → `CB001`, `P01`, `CV01`, `PC001`, `ML001`, `DG001`, `SK001`, `TK003`; loại lạ → chuỗi rỗng |
+| 2 | `Vector` | 6 | Nhập từ `cin`, `out_of_range`, copy constructor, gán tách biến |
+| 3 | Phòng ban & chức vụ | 6 | Sinh mã `P01`→`P03`, `CV01`; lưu tên/phụ cấp |
+| 4 | Cán bộ | 10 | Thêm nhiều/thêm một, mã `CB001`→`CB004`, mặc định `DangLamViec`, `TinhTuoi()`/`TinhNamLam()` |
+| 5 | Tìm kiếm & sắp xếp | 6 | Tìm theo tên không phân biệt hoa/thường (2 kết quả), "không tìm thấy", QuickSort tăng/giản/khương hóa |
+| 6 | Phân công — FK + C2 | 10 | Phòng chính; **C2** chặn 2 phòng chính, cho phép kiêm nhiệm; FK sai `MaCanBo`/`MaPhong`/`MaChucVu` đều bị từ chối |
+| 7 | Lương — công thức + C3 | 6 | `tinhThucLinh()` = `(3.0+2.0)*1490000 + 1 = 7450001`; `HieuLuc()` theo `DenNgay`; **C3** chặn trùng thời gian |
+| 8 | Đánh giá & khen thưởng | 4 | Lấy đánh giá **mới nhất** (DG002 2026 thay DG001 "Giỏi"); thêm sự kiện `SK001` |
+| 9 | Tài khoản & đăng nhập | 9 | Tạo `TK003` liên kết `CB001`; trùng tên đăng nhập bị từ chối; đúng/sai mật khẩu; khoá → không đăng nhập được; mở khoá lại |
+| 10 | Xóa mềm & sửa | 10 | Xóa mềm `CB004` (còn 4 bản ghi, `NghiViec`); thống kê vẫn tính cả bản ghi đã xóa mềm; sửa thông tin giữ nguyên mã; FK chặn xóa phòng/chức vụ đang dùng |
+| 11 | Thống kê & báo cáo | 9 | `demCanBoNu` 2/4; `lietKeCanBoCNTT` 2; `lietKeDenHanTangLuong` 4/4; `tongThuNhap` = 5215000 (chỉ bản lương hiệu lực); `thongKeBaoCao` đủ 4 chỉ số |
+| 12 | **Đa hình `ThucThe*`** | 20 | 8 con trỏ; 8 nhãn `loaiThucThe()`; 8 bản `xuat()`; `xuatTatCaTheoMau` đủ 8 loại & đúng số bản ghi |
+| 13 | Lưu trữ & round-trip | 12 | Đếm dòng 5 file; `DocTatCa()` đọc lại đúng số lượng/nội dung/sau khi sửa & xóa mềm |
 
-### 5.1 CÃ¡ch cháº¡y láº¡i
+### 5.1 Cách chạy lại
 
 ```bash
 g++ -std=c++11 -Wall -Wextra CanBo.cpp PhongBan.cpp ChucVu.cpp PhanCong.cpp Luong.cpp DanhGia.cpp ThiDua.cpp Account.cpp Vector.cpp NghiepVu.cpp kiemthu\KiemThu.cpp -o KT.exe
 KT.exe
 ```
 
-Harness cÃ³ `main()` riÃªng nÃªn **khÃ´ng** dÃ¹ng `*.cpp` (sáº½ trÃ¹ng `main()` vá»›i `main.cpp` cá»§a chÆ°Æ¡ng trÃ¬nh chÃ­nh).
+Harness có `main()` riêng nên **không** dùng `*.cpp` (sẽ trùng `main()` với `main.cpp` của chương trình chính).
 
-Bá»™ kiá»ƒm thá»­ **ghi Ä‘Ã¨** 8 file trong `data/` rá»“i Ä‘Æ°a chÃºng vá» rá»—ng khi káº¿t thÃºc. VÃ¬ váº­y:
-- náº¿u `data/` cÃ²n dá»¯ liá»‡u tháº­t, chÆ°Æ¡ng trÃ¬nh dá»«ng ngay, khÃ´ng ghi Ä‘Ã¨, exit code **2**;
-- náº¿u `data/` rá»—ng: cháº¡y Ä‘áº§y Ä‘á»§ 94 kiá»ƒm tra rá»“i tá»± dá»n sáº¡ch, exit code **0** (táº¥t cáº£ PASS) hoáº·c **1** (cÃ³ FAIL).
+Bộ kiểm thử **ghi đè** 8 file trong `data/` rồi đưa chúng về trạng thái "7 file rỗng + `account.txt` chứa đúng 2 tài khoản demo" khi kết thúc, nên chạy `QLCB.exe` ngay sau đó vẫn đăng nhập được. Điều kiện được phép chạy:
+
+- 7 file `data/*.txt` (trừ `account.txt`) phải **rỗng**;
+- `data/account.txt` được phép **rỗng hoặc chỉ chứa đúng 2 tài khoản demo** `TK001|admin|admin|ADMIN|1|` và `TK002|user|user|USER|1|` — đây chính là trạng thái sinh ra sau khi chạy chương trình chính một lần, nên việc chạy `KT.exe` ngay sau `QLCB.exe` vẫn được.
+
+Nếu `data/` có dữ liệu thật (cán bộ, phân công, …): chương trình **dừng ngay, không ghi đè**, in ra file cần xử lý, exit code **2**. Chạy hợp lệ: **94/94 PASS** với exit code **0** (tất cả PASS) hoặc **1** (có FAIL).
 
 ---
 
-## 6. Thuáº­t toÃ¡n & Ä‘á»™ phá»©c táº¡p
+## 6. Thuật toán & độ phức tạp
 
-| Thuáº­t toÃ¡n | NÆ¡i dÃ¹ng | Big-O |
+| Thuật toán | Nơi dùng | Big-O |
 |---|---|---|
-| TÃ¬m kiáº¿m tuyáº¿n tÃ­nh theo mÃ£ | `NghiepVu::timXTheoMa()` (8 báº£ng), kiá»ƒm tra khÃ³a ngoáº¡i | O(n) |
-| TÃ¬m theo tÃªn (khá»›p chuá»—i con) | `timKiemCanBoTheoTen()` | O(n Â· L) |
-| QuickSort tÄƒng/giáº£m | `sapXepTheoMa()` | O(n log n) trung bÃ¬nh |
-| QuÃ©t danh sÃ¡ch khi join runtime | `HieuLuc()`, `demCanBoNu()`, `tongThuNhap()`, `hienThiDanhSach()` | O(n Â· k) |
-| `sinhMaTuDong()` | quÃ©t háº­u tá»‘ lá»›n nháº¥t rá»“i +1 | O(n Â· L) |
-| TÃ¬m Ä‘Ã¡nh giÃ¡ má»›i nháº¥t | `lietKeCanBoGioi()` | O(n Â· m) |
+| Tìm kiếm tuyến tính theo mã | `NghiepVu::timXTheoMa()` (8 bảng), kiểm tra khóa ngoại | O(n) |
+| Tìm theo tên (khớp chuỗi con) | `timKiemCanBoTheoTen()` | O(n · L) |
+| QuickSort tăng/giảm | `sapXepTheoMa()` | O(n log n) trung bình |
+| Quét danh sách khi join runtime | `HieuLuc()`, `demCanBoNu()`, `tongThuNhap()`, `hienThiDanhSach()` | O(n · k) |
+| `sinhMaTuDong()` | quét hậu tố lớn nhất rồi +1 | O(n · L) |
+| Tìm đánh giá mới nhất | `lietKeCanBoGioi()` | O(n · m) |
 
-Chi tiáº¿t Ä‘áº§y Ä‘á»§ (kÃ¨m giáº£i thÃ­ch vÃ¬ sao chá»n QuickSort, Ä‘Ã¡nh Ä‘á»•i bá»™ nhá»› Ä‘á»‡m) xem `README.md` Â§9.
-
----
-
-## 7. Cáº¥u trÃºc lÆ°u trá»¯
-
-- Má»—i model tá»± quáº£n danh sÃ¡ch tÄ©nh Ä‘á»™ng: `static T* ds; static int soLuong; static int sucChua;` cÃ¹ng bá»™ `Them` / `XoaMot` / `LayTai` / `SoLuong` / `DocTatCa` / `GhiTatCa`, dÃ¹ng `new[]/delete[]` vÃ  **nhÃ¢n Ä‘Ã´i khi Ä‘áº§y** â†’ thá»ƒ hiá»‡n rÃµ encapsulation + phÃ¢n tÃ­ch Ä‘á»™ phá»©c táº¡p.
-- LÆ°u trá»¯ file: má»—i báº£ng 1 file `.txt` trong `data/`, phÃ¢n tÃ¡ch trÆ°á»ng báº±ng dáº¥u `|` (xem `README.md` Â§10).
-- `NghiepVu::khoiTao()` náº¡p 8 file lÃºc khá»Ÿi Ä‘á»™ng vÃ  táº¡o 2 tÃ i khoáº£n demo (`admin`/`admin`, `user`/`user`) náº¿u chÆ°a cÃ³.
+Chi tiết đầy đủ (kèm giải thích vì sao chọn QuickSort, đánh đổi bộ nhớ đệm) xem `README.md` §9.
 
 ---
 
-## 8. Kiá»ƒm tra thá»§ cÃ´ng trÃªn chÆ°Æ¡ng trÃ¬nh tháº­t
+## 7. Cấu trúc lưu trữ
 
-NgoÃ i bá»™ kiá»ƒm thá»­ tá»± Ä‘á»™ng, `QLCB.exe` Ä‘Ã£ Ä‘Æ°á»£c cháº¡y vá»›i ká»‹ch báº£n nháº­p tá»« bÃ n phÃ­m Ä‘á»ƒ xÃ¡c nháº­n:
-
-- Ä‘Äƒng nháº­p `admin`/`admin` â†’ vÃ o Ä‘Ãºng MENU ADMIN; sai máº­t kháº©u â†’ bÃ¡o lá»—i, tá»‘i Ä‘a 3 láº§n thá»­;
-- thÃªm cÃ¡n bá»™ qua menu 1 â†’ sinh mÃ£ `CB001` vÃ  bÃ¡o "Da them can bo CB001!";
-- chá»n **má»¥c 12** â†’ in `=== XUAT TAT CA DUOC QUA CON TRO ThucThe* (5 ban ghi) ===` kÃ¨m nhÃ£n `----- CAN_BO -----`, `----- TAI_KHOAN -----`, â€¦;
-- cÃ¡c submenu nhÃ³m quay láº¡i Ä‘Ãºng, chá»n `0` á»Ÿ menu chÃ­nh â†’ thoÃ¡t Ãªm; háº¿t EOF â†’ thoÃ¡t gá»n, khÃ´ng quay vÃ´ háº¡n;
-- sau má»—i láº§n cháº¡y, 8 file `data/*.txt` Ä‘Ã£ Ä‘Æ°á»£c Ä‘Æ°a vá» 0 byte.
+- Mỗi model tự quản danh sách tĩnh động: `static T* ds; static int soLuong; static int sucChua;` cùng bộ `Them` / `XoaMot` / `LayTai` / `SoLuong` / `DocTatCa` / `GhiTatCa`, dùng `new[]/delete[]` và **nhân đôi khi đầy** → thể hiện rõ encapsulation + phân tích độ phức tạp.
+- Lưu trữ file: mỗi bảng 1 file `.txt` trong `data/`, phân tách trường bằng dấu `|` (xem `README.md` §10).
+- `NghiepVu::khoiTao()` nạp 8 file lúc khởi động và tạo 2 tài khoản demo (`admin`/`admin`, `user`/`user`) nếu chưa có.
 
 ---
 
-## 9. Äá»‘i chiáº¿u vá»›i Ä‘á» bÃ i
+## 8. Kiểm tra thủ công trên chương trình thật
 
-| YÃªu cáº§u Ä‘á» bÃ i | Má»©c Ä‘á»™ Ä‘Ã¡p á»©ng |
+Ngoài bộ kiểm thử tự động, `QLCB.exe` đã được chạy với kịch bản nhập từ bàn phím để xác nhận:
+
+- đăng nhập `admin`/`admin` → vào đúng MENU ADMIN; sai mật khẩu → báo lỗi, tối đa 3 lần thử;
+- thêm cán bộ qua menu 1 → sinh mã `CB001` và báo "Da them can bo CB001!";
+- chọn **mục 12** → in `=== XUAT TAT CA DUOC QUA CON TRO ThucThe* (5 ban ghi) ===` kèm nhãn `----- CAN_BO -----`, `----- TAI_KHOAN -----`, …;
+- các submenu nhóm quay lại đúng, chọn `0` ở menu chính → thoát êm; hết EOF → thoát gọn, không quay vô hạn;
+- sau mỗi lần chạy, 7 file `data/*.txt` rỗng và `account.txt` chứa đúng 2 tài khoản demo, nên lần chạy kế tiếp vẫn đăng nhập được.
+
+---
+
+## 9. Đối chiếu với đề bài
+
+| Yêu cầu đề bài | Mức độ đáp ứng |
 |---|---|
-| XÃ¢y dá»±ng CSDL gá»“m 8 báº£ng vá»›i PK/FK | âœ… Theo Ä‘Ãºng ERD má»¥c 4 (`README.md`) |
-| 4 tÃ­nh cháº¥t OOP | âœ… Â§2.2 |
-| TÃ¬m kiáº¿m | âœ… theo tÃªn (khá»›p chuá»—i con, khÃ´ng phÃ¢n biá»‡t hoa/thÆ°á»ng) |
-| Sáº¯p xáº¿p | âœ… QuickSort tÄƒng/giáº£m theo mÃ£ |
-| Thá»‘ng kÃª / bÃ¡o cÃ¡o | âœ… 6 hÃ m thá»‘ng kÃª + `thongKeBaoCao` in 4 chá»‰ sá»‘ tá»•ng há»£p |
-| Xá»­ lÃ½ file | âœ… Ä‘á»c/ghi 8 file `.txt`, tá»± náº¡p lÃºc khá»Ÿi Ä‘á»™ng |
-| PhÃ¢n quyá»n Admin / User | âœ… `TAI_KHOAN.VaiTro`, 12 má»¥c ADMIN / 6 má»¥c USER |
-| **Má»Ÿ rá»™ng ngoÃ i Ä‘á» bÃ i** | â€¢ Má»¥c 12 menu: xuáº¥t táº¥t cáº£ báº£n ghi qua Ä‘a hÃ¬nh `ThucThe*`<br>â€¢ Bá»™ kiá»ƒm thá»­ tá»± Ä‘á»™ng 94 phÃ©p kiá»ƒm tra<br>â€¢ RÃ ng buá»™c nghiá»‡p vá»¥ C1â€“C6 Ä‘Æ°á»£c kiá»ƒm tra tá»± Ä‘á»™ng |
+| Xây dựng CSDL gồm 8 bảng với PK/FK | ✅ Theo đúng ERD mục 4 (`README.md`) |
+| 4 tính chất OOP | ✅ §2.2 |
+| Tìm kiếm | ✅ theo tên (khớp chuỗi con, không phân biệt hoa/thường) |
+| Sắp xếp | ✅ QuickSort tăng/giảm theo mã |
+| Thống kê / báo cáo | ✅ 6 hàm thống kê + `thongKeBaoCao` in 4 chỉ số tổng hợp |
+| Xử lý file | ✅ đọc/ghi 8 file `.txt`, tự nạp lúc khởi động |
+| Phân quyền Admin / User | ✅ `TAI_KHOAN.VaiTro`, 12 mục ADMIN / 6 mục USER |
+| **Mở rộng ngoài đề bài** | • Mục 12 menu: xuất tất cả bản ghi qua đa hình `ThucThe*`<br>• Bộ kiểm thử tự động 94 phép kiểm tra<br>• Ràng buộc nghiệp vụ C1–C6 được kiểm tra tự động |
 
 ---
 
-## 10. Háº¡n cháº¿ & hÆ°á»›ng phÃ¡t triá»ƒn
+## 10. Hạn chế & hướng phát triển
 
-**Háº¡n cháº¿ Ä‘Ã£ biáº¿t:**
+**Hạn chế đã biết:**
 
-1. TÃ¬m kiáº¿m/sáº¯p xáº¿p/thá»‘ng kÃª Ä‘á»u quÃ©t máº£ng tuyáº¿n tÃ­nh â†’ O(n); quy mÃ´ dá»¯ liá»‡u ráº¥t lá»›n sáº½ cháº­m. CÃ³ thá»ƒ nÃ¢ng lÃªn cÃ¢y nhá»‹ phÃ¢n tÃ¬m kiáº¿m / `std::map` cho khÃ³a chÃ­nh.
-2. Dá»¯ liá»‡u lÆ°u á»Ÿ dáº¡ng text, chÆ°a cÃ³ chá»‰ má»¥c; `DocTatCa()` pháº£i Ä‘á»c toÃ n bá»™ file má»—i láº§n khá»Ÿi Ä‘á»™ng.
-3. `NghiepVu` lÃ  mÃ´-Ä‘un nghiá»‡p vá»¥ táº­p trung khÃ¡ lá»›n â€” cÃ³ thá»ƒ tÃ¡ch thÃ nh nhiá»u service náº¿u má»Ÿ rá»™ng thÃªm nghiá»‡p vá»¥.
-4. XÃ³a cÃ¡n bá»™ lÃ  xÃ³a má»m nÃªn danh sÃ¡ch váº«n giá»¯ báº£n ghi `NghiViec`; thá»‘ng kÃª hiá»‡n **cá»‘ Ã½** tÃ­nh cáº£ báº£n ghi nÃ y (Ä‘Ã£ cÃ³ phÃ©p kiá»ƒm tra riÃªng kháº³ng Ä‘á»‹nh hÃ nh vi nÃ y).
-5. XÃ¡c thá»±c tÃ i khoáº£n dÃ¹ng so khá»›p chuá»—i thuáº§n, chÆ°a mÃ£ hÃ³a máº­t kháº©u â€” chá»‰ phÃ¹ há»£p bÃ i táº­p, khÃ´ng dÃ¹ng cho sáº£n pháº©m tháº­t.
+1. Tìm kiếm/sắp xếp/thống kê đều quét mảng tuyến tính → O(n); quy mô dữ liệu rất lớn sẽ chậm. Có thể nâng lên cây nhị phân tìm kiếm / `std::map` cho khóa chính.
+2. Dữ liệu lưu ở dạng text, chưa có chỉ mục; `DocTatCa()` phải đọc toàn bộ file mỗi lần khởi động.
+3. `NghiepVu` là mô-đun nghiệp vụ tập trung khá lớn — có thể tách thành nhiều service nếu mở rộng thêm nghiệp vụ.
+4. Xóa cán bộ là xóa mềm nên danh sách vẫn giữ bản ghi `NghiViec`; thống kê hiện **cố ý** tính cả bản ghi này (đã có phép kiểm tra riêng khẳng định hành vi này).
+5. Xác thực tài khoản dùng so khớp chuỗi thuần, chưa mã hóa mật khẩu — chỉ phù hợp bài tập, không dùng cho sản phẩm thật.
 
-**HÆ°á»›ng phÃ¡t triá»ƒn:**
+**Hướng phát triển:**
 
-- ThÃªm `std::map<string, ...>` Ä‘á»ƒ tra cá»©u khÃ³a chÃ­nh O(log n).
-- Bá»• sung `TAI_KHOAN.MaCanBo` má»™tâ€“má»™t hai chiá»u cháº·t hÆ¡n, vÃ  chá»©c nÄƒng Ä‘á»•i máº­t kháº©u.
-- TÃ¡ch `Vector` thÃ nh module generic dÃ¹ng template Ä‘á»ƒ tÃ¡i sá»­ dá»¥ng cho cáº£ 8 model.
-- Xuáº¥t bÃ¡o cÃ¡o ra file CSV Ä‘á»ƒ in áº¥n.
+- Thêm `std::map<string, ...>` để tra cứu khóa chính O(log n).
+- Bổ sung `TAI_KHOAN.MaCanBo` một–một hai chiều chặt hơn, và chức năng đổi mật khẩu.
+- Tách `Vector` thành module generic dùng template để tái sử dụng cho cả 8 model.
+- Xuất báo cáo ra file CSV để in ấn.
