@@ -1,6 +1,6 @@
 # PBL2: Hệ thống quản lý cán bộ (Đề tài 21)
 
-Đồ án cơ sở lập trình – ngôn ngữ C++, phương pháp hướng đối tượng. Gồm hai phiên bản:
+Đồ án cơ sở lập trình – ngôn ngữ C++, lập trình hướng đối tượng. Gồm hai phiên bản:
 
 - **Console**: menu 10 chức năng nghiệp vụ, tương tác qua dòng lệnh.
 - **GUI**: giao diện đồ họa dùng ImGui + GLFW (`src/imgui_main.cpp`).
