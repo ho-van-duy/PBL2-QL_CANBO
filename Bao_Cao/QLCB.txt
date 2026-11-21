@@ -1,0 +1,23 @@
+Đề tài 21: Viết chương trình quản lý cán bộ theo hướng đối tượng. Trong đó:
+a.Thông tin của cán bộ bao gồm thông tin sau:
+- Mã cán bộ - Họ tên
+- Giới tính - Quê quán
+- Năm sinh -Chuyên môn
+- Trình độ -Hệ số lương
+- Phụ cấp trách nhiệm - Ăn trưa
+-Thực lĩnh :
+Không nhập dữ liệu vào, tính theo công thức= (HSL + PC)*1.490.000 + Ăn trưa
+- Năm tăng lương - Xếp lọai lao động
+b. Yêu cầu viết chương trình dưới dạng hướng đối tượng để thực hiện các thao tác
+sau:
+- Tạo và nhập một danh sách cán bộ
+- Hiển thi danh sách cán bộ hiện có trong danh sách
+- Liệt kê danh sách cán bộ đến thời điểm nâng lương
+- Đếm xem có bao nhiêu cán bộ nữ trong cơ quan
+- Tính tổng số lương thu nhập của toàn bộ cán bộ trong danh sách
+- Liệt kê các cán bộ có chuyên môn “ Công nghệ thông tin “ hiện có trong danh
+sách
+- Hiển thị danh sách các cán bộ được xếp loại lao động giỏi
+- Sắp xếp danh sách theo mã cán bộ
+- Loại bỏ một cán bộ có mã xác định khỏi danh sách
+- Thêm một cán bộ vào trong danh sách.

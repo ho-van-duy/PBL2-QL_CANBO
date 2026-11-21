@@ -1,0 +1,12 @@
+CB001;Nguyen Van An;Nam;Ha Noi;1978;Cong nghe thong tin;Dai hoc;3.75;1.1;0.45;2025;Gioi
+CB002;Tran Thi Bich;Nu;Hai Phong;1982;Ke toan;Dai hoc;2.86;0.5;0.4;2026;Kha
+CB003;Le Van Cuong;Nam;Nam Dinh;1990;Cong nghe thong tin;Cao hoc;2.34;0.3;0.35;2030;Kha
+CB004;Pham Thi Dung;Nu;Thai Binh;1985;Cong nghe thong tin;Dai hoc;2.54;0.5;0.45;2024;Gioi
+CB005;Hoang Van Em;Nam;Ha Noi;1975;Vat ly;Tien si;3.98;1.4;0.5;2022;Gioi
+CB006;Tran Dinh Vu;Nam;Binh Dinh;1995;Ke toan;Dai hoc;2.67;0.4;0.4;2032;Kha
+CB007;Nguyen Thi Hoa;Nu;Da Nang;1988;Cong nghe thong tin;Cao dang;2.15;0.2;0.3;2023;Gioi
+CB008;Dang Van Hung;Nam;Quang Nam;1979;Xay dung;Cao hoc;3.2;0.8;0.4;2021;Trung binh
+CB009;Ho Thi Lan;Nu;Can Tho;1993;Ke toan;Trung cap;1.65;0.1;0.25;2028;Yeu
+CB010;Bui Van Minh;Nam;Nghe An;1984;Cong nghe thong tin;Dai hoc;3.05;0.9;0.5;2026;Gioi
+CB011;Vo Thi Thu;Nu;Khanh Hoa;1997;Ngon ngu;Dai hoc;2.2;0.3;0.35;2029;Kha
+CB012;Ngo Van Tuan;Nam;Thanh Hoa;1972;Quan ly;Cao hoc;4.1;1.2;0.6;2019;Gioi
